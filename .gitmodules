@@ -1,0 +1,3 @@
+[submodule "luogu-api-docs"]
+	path = packages/core/src/luogu-api-docs
+	url = ../../0f-0b/luogu-api-docs

@@ -1,0 +1,8 @@
+node_modules/
+dist/
+
+!.*rc.js
+!.*rc.mjs
+!.*rc.cjs
+
+luogu-api-docs/
