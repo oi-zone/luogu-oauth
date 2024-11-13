@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import Provider from "oidc-provider";
 
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const oidc = new Provider(process.env.ISSUER!);
 const callback = oidc.callback();
 
