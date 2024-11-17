@@ -12,9 +12,14 @@
   "dependencies": {
     "@jmondi/oauth2-server": "^4.0.2",
     "@prisma/client": "^5.22.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.460.0",
     "next": "15.0.3",
     "react": "19.0.0-rc-66855b96-20241106",
-    "react-dom": "19.0.0-rc-66855b96-20241106"
+    "react-dom": "19.0.0-rc-66855b96-20241106",
+    "tailwind-merge": "^2.5.4",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.14.0",
@@ -32,6 +37,7 @@
     "postcss": "^8",
     "prettier": "^3.3.3",
     "prisma": "^5.22.0",
+    "shadcn": "^2.1.6",
     "tailwindcss": "^3.4.1",
     "typescript": "^5",
     "typescript-eslint": "^8.14.0"
