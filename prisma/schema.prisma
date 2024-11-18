@@ -69,7 +69,8 @@ model Token {
 }
 
 model User {
-  id String @id
+  id       String @id
+  clientId String @unique
 
   authCodes AuthCode[]
   tokens    Token[]

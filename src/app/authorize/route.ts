@@ -4,13 +4,16 @@ import {
   responseToVanilla,
 } from "@jmondi/oauth2-server/vanilla";
 import authorizationServer from "@/lib/authorization-server";
+import { cookies } from "next/headers";
 
 export async function GET(request: NextRequest) {
+  // https://github.com/vercel/next.js/issues/72909
+  if (request.headers.get("rsc")) return new NextResponse();
+
   try {
     const authRequest = await authorizationServer.validateAuthorizationRequest(
       await requestFromVanilla(request),
     );
-    console.log(authRequest);
 
     const uid = request.nextUrl.searchParams.get("uid");
     if (!uid) {
@@ -19,7 +22,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(url);
     }
 
-    authRequest.user = { id: uid };
+    const cookieStore = await cookies();
+    const clientId = cookieStore.get(uid)?.value;
+    authRequest.user = { id: uid, clientId };
 
     authRequest.isAuthorizationApproved = true;
     const oauthResponse =

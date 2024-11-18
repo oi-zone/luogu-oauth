@@ -1,5 +1,6 @@
 import { randomBytes } from "node:crypto";
 import { AuthorizationServer } from "@jmondi/oauth2-server";
+import type { User } from "@prisma/client";
 import prisma from "./prisma";
 
 const generateRandomToken = (size = 32) =>
@@ -136,8 +137,8 @@ authorizationServer.enableGrantType({
       await prisma.authCode.create({
         data: {
           ...authCode,
-          userId: user?.id as string | undefined,
-          clientId: client.id,
+          user: { connect: user as User | undefined },
+          client: { connect: { id: client.id } },
           scopes: { connect: scopes },
         },
       });
