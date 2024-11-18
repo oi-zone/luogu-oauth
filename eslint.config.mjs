@@ -16,6 +16,8 @@ const compat = new FlatCompat({
   allConfig: pluginJs.configs.all,
 });
 
+const shadcn = "src/components/ui/*.tsx";
+
 /** @type {import('eslint').Linter.Config[]} */
 export default tseslint.config(
   { files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"] },
@@ -25,6 +27,7 @@ export default tseslint.config(
   pluginJs.configs.recommended,
   {
     files: ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+    ignores: [shadcn],
     extends: [
       ...tseslint.configs.strictTypeChecked,
       ...tseslint.configs.stylisticTypeChecked,
@@ -36,6 +39,7 @@ export default tseslint.config(
       },
     },
   },
+  { files: [shadcn], extends: tseslint.configs.strict },
   pluginReact.configs.flat.recommended,
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   configPrettier,

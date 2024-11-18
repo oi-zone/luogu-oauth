@@ -128,7 +128,7 @@ authorizationServer.enableGrantType({
       }),
     issueAuthCode: async (client, user, scopes) => ({
       code: await generateRandomToken(),
-      expiresAt: new Date(),
+      expiresAt: undefined as never,
       user,
       client,
       scopes,

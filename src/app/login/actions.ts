@@ -4,13 +4,13 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import type { SearchParams } from "next/dist/server/request/search-params";
 import prisma from "@/lib/prisma";
+import { formSchema, type FormSchema } from "./schemas";
 
 export async function loginWithClientId(
   searchParams: SearchParams,
-  formData: FormData,
+  formData: FormSchema,
 ) {
-  const uid = formData.get("uid") as string;
-  const clientId = formData.get("clientId") as string;
+  const { uid, clientId } = await formSchema.parseAsync(formData);
 
   // TODO: validate _uid and __client_id
   await prisma.user.upsert({
