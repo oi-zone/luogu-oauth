@@ -1,10 +1,12 @@
 import { NextResponse, type NextRequest } from "next/server";
+import jwt from "jsonwebtoken";
 import {
   requestFromVanilla,
   responseToVanilla,
 } from "@jmondi/oauth2-server/vanilla";
+import { SECRET_KEY } from "@/lib/constants";
 import authorizationServer from "@/lib/authorization-server";
-import { cookies } from "next/headers";
+import prisma from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
   // https://github.com/vercel/next.js/issues/72909
@@ -15,16 +17,19 @@ export async function GET(request: NextRequest) {
       await requestFromVanilla(request),
     );
 
-    const uid = request.nextUrl.searchParams.get("uid");
-    if (!uid) {
+    if (!request.nextUrl.searchParams.has("uid")) {
       const url = request.nextUrl.clone();
       url.pathname = "/login";
       return NextResponse.redirect(url);
     }
 
-    const cookieStore = await cookies();
-    const clientId = cookieStore.get(uid)?.value;
-    authRequest.user = { id: uid, clientId };
+    const { uid } = jwt.verify(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      request.nextUrl.searchParams.get("uid")!,
+      SECRET_KEY,
+    ) as { uid: string };
+    authRequest.user =
+      (await prisma.user.findUnique({ where: { id: uid } })) ?? undefined;
 
     authRequest.isAuthorizationApproved = true;
     const oauthResponse =

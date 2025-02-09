@@ -1,6 +1,7 @@
 import { randomBytes } from "node:crypto";
 import { AuthorizationServer } from "@jmondi/oauth2-server";
 import type { User } from "@prisma/client";
+import { SECRET_KEY } from "./constants";
 import prisma from "./prisma";
 
 const generateRandomToken = (size = 32) =>
@@ -91,7 +92,7 @@ const authorizationServer = new AuthorizationServer(
       prisma.scope.findMany({ where: { name: { in: scopeNames } } }),
     finalize: (scopes) => Promise.resolve(scopes),
   },
-  "secret-key",
+  SECRET_KEY,
 );
 export default authorizationServer;
 
