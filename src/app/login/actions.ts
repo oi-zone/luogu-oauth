@@ -16,13 +16,13 @@ export async function loginWithClientId(
 
   // TODO: validate _uid and __client_id
   await prisma.user.upsert({
-    where: { id: uid },
-    create: { id: uid, clientId },
+    where: { id: uid.toString() },
+    create: { id: uid.toString(), clientId },
     update: { clientId },
   });
 
   const session = await getIronSessionData();
-  session.saved.push(Number(uid));
+  session.saved = Array.from(new Set(session.saved).add(uid));
   await session.save();
 
   const urlSearchParams = new URLSearchParams(searchParams as never);

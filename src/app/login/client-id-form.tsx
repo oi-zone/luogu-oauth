@@ -23,7 +23,7 @@ export default function ClientIdForm({
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      uid: "",
+      uid: "" as never,
       clientId: "",
     },
   });

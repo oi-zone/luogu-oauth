@@ -19,7 +19,9 @@ export async function GET(request: NextRequest) {
 
     if (!request.nextUrl.searchParams.has("uid")) {
       const url = request.nextUrl.clone();
-      url.pathname = "/login";
+      url.pathname = "/select";
+      url.search = "";
+      url.searchParams.set("next", request.nextUrl.toString());
       return NextResponse.redirect(url);
     }
 
@@ -27,9 +29,10 @@ export async function GET(request: NextRequest) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       request.nextUrl.searchParams.get("uid")!,
       SECRET_KEY,
-    ) as { uid: string };
+    ) as { uid: number };
     authRequest.user =
-      (await prisma.user.findUnique({ where: { id: uid } })) ?? undefined;
+      (await prisma.user.findUnique({ where: { id: uid.toString() } })) ??
+      undefined;
 
     authRequest.isAuthorizationApproved = true;
     const oauthResponse =
