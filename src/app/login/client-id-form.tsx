@@ -40,7 +40,13 @@ export default function ClientIdForm({
               <FormItem className="grid gap-2">
                 <FormLabel>用户 ID</FormLabel>
                 <FormControl>
-                  <Input placeholder="_uid" type="number" {...field} min={1} />
+                  <Input
+                    className="font-mono"
+                    placeholder="_uid"
+                    type="number"
+                    {...field}
+                    min={1}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -53,7 +59,11 @@ export default function ClientIdForm({
               <FormItem className="grid gap-2">
                 <FormLabel>Client ID</FormLabel>
                 <FormControl>
-                  <Input placeholder="__client_id" {...field} />
+                  <Input
+                    className="font-mono"
+                    placeholder="__client_id"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
