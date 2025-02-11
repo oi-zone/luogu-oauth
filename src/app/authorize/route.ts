@@ -19,9 +19,9 @@ export async function GET(request: NextRequest) {
 
     if (!request.nextUrl.searchParams.has("uid")) {
       const url = request.nextUrl.clone();
-      url.pathname = "/select";
+      url.pathname = "/login";
       url.search = "";
-      url.searchParams.set("next", request.nextUrl.toString());
+      url.searchParams.set("query", request.nextUrl.searchParams.toString());
       return NextResponse.redirect(url);
     }
 

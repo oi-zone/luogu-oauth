@@ -1,6 +1,4 @@
 import type { SearchParams } from "next/dist/server/request/search-params";
-import { loginWithClientId } from "./actions";
-import ClientIdForm from "./client-id-form";
 import {
   Card,
   CardContent,
@@ -8,11 +6,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { loginWithClientId } from "./actions";
+import ClientIdForm from "./client-id-form";
 
-export default async function Page(props: {
+export default async function Page({
+  searchParams,
+}: {
   searchParams: Promise<SearchParams>;
 }) {
-  const searchParams = await props.searchParams;
+  const { query } = await searchParams;
+
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
@@ -22,7 +25,7 @@ export default async function Page(props: {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ClientIdForm action={loginWithClientId.bind(null, searchParams)} />
+        <ClientIdForm action={loginWithClientId.bind(null, query as string)} />
       </CardContent>
     </Card>
   );
