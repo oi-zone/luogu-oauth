@@ -17,7 +17,8 @@ import { formSchema, type FormSchema } from "./schemas";
 
 export default function ClientIdForm({
   action,
-}: {
+  ...props
+}: Omit<React.ComponentProps<"form">, "action"> & {
   action: (formData: FormSchema) => Promise<void>;
 }) {
   const form = useForm<FormSchema>({
@@ -31,8 +32,14 @@ export default function ClientIdForm({
   return (
     <Form {...form}>
       {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-      <form onSubmit={form.handleSubmit(action)}>
-        <div className="grid gap-4">
+      <form {...props} onSubmit={form.handleSubmit(action)}>
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col items-center text-center">
+            <h1 className="text-2xl font-bold">欢迎回来</h1>
+            <p className="text-balance text-muted-foreground">
+              授权登录您的洛谷账号
+            </p>
+          </div>
           <FormField
             control={form.control}
             name="uid"
@@ -41,6 +48,7 @@ export default function ClientIdForm({
                 <FormLabel>用户 ID</FormLabel>
                 <FormControl>
                   <Input
+                    autoFocus
                     className="font-mono"
                     placeholder="_uid"
                     type="number"
@@ -57,7 +65,15 @@ export default function ClientIdForm({
             name="clientId"
             render={({ field }) => (
               <FormItem className="grid gap-2">
-                <FormLabel>Client ID</FormLabel>
+                <div className="flex items-center">
+                  <FormLabel>Client ID</FormLabel>
+                  <a
+                    href="#"
+                    className="ml-auto text-sm underline-offset-2 hover:underline"
+                  >
+                    这是什么？
+                  </a>
+                </div>
                 <FormControl>
                   <Input
                     className="font-mono"
@@ -72,6 +88,17 @@ export default function ClientIdForm({
           <Button type="submit" className="w-full">
             登录
           </Button>
+          <div className="text-center text-sm">
+            没有账号？
+            <a
+              href="https://www.luogu.com.cn/auth/register"
+              className="underline underline-offset-4"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              注册
+            </a>
+          </div>
         </div>
       </form>
     </Form>

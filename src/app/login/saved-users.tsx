@@ -1,11 +1,12 @@
 import { getIronSessionData } from "@/lib/session";
-import UserInfo from "@/components/user-info";
 import {
   Command,
+  CommandEmpty,
   CommandInput,
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import UserInfo from "@/components/user-info";
 
 export default async function SavedUsers({
   action,
@@ -16,8 +17,9 @@ export default async function SavedUsers({
 
   return (
     <Command>
-      <CommandInput autoFocus placeholder="Type a command or search..." />
+      <CommandInput placeholder="搜索保存的用户..." />
       <CommandList>
+        <CommandEmpty>没有找到已保存的用户。</CommandEmpty>
         {Array.from(new Set(session.saved)).map((uid) => (
           <CommandItem
             key={uid}
