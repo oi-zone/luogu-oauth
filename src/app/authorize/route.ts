@@ -1,11 +1,10 @@
 import { NextResponse, type NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
-import {
-  requestFromVanilla,
-  responseToVanilla,
-} from "@jmondi/oauth2-server/vanilla";
+import { responseToVanilla } from "@jmondi/oauth2-server/vanilla";
 import { SECRET_KEY } from "@/lib/constants";
-import authorizationServer from "@/lib/authorization-server";
+import authorizationServer, {
+  requestFromNext,
+} from "@/lib/authorization-server";
 import prisma from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
@@ -14,7 +13,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const authRequest = await authorizationServer.validateAuthorizationRequest(
-      await requestFromVanilla(request),
+      await requestFromNext(request),
     );
 
     if (!request.nextUrl.searchParams.has("uid")) {

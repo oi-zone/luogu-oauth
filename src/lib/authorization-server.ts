@@ -1,8 +1,24 @@
 import { randomBytes } from "node:crypto";
-import { AuthorizationServer, OAuthScope } from "@jmondi/oauth2-server";
+import {
+  AuthorizationServer,
+  OAuthRequest,
+  OAuthScope,
+} from "@jmondi/oauth2-server";
 import { Scope, type Prisma } from "@prisma/client";
 import { SECRET_KEY } from "./constants";
 import prisma from "./prisma";
+import type { NextRequest } from "next/server";
+
+export const requestFromNext = async (request: NextRequest) =>
+  new OAuthRequest({
+    query: Object.fromEntries(request.nextUrl.searchParams),
+    body: await request.text().then((body) => {
+      if (request.headers.get("content-type") === "application/json")
+        return JSON.parse(body) as Record<string, string>;
+      return Object.fromEntries(new URLSearchParams(body));
+    }),
+    headers: request.headers,
+  });
 
 const generateRandomToken = (size = 32) =>
   new Promise<string>((resolve, reject) => {
@@ -78,7 +94,7 @@ const authorizationServer = new AuthorizationServer(
     isClientValid: (grantType, client, clientSecret) =>
       Promise.resolve(
         client.allowedGrants.includes(grantType) &&
-          clientSecret === client.secret,
+          clientSecret === (client.secret ?? undefined),
       ),
   },
   {
