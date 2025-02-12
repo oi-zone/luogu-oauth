@@ -68,15 +68,25 @@ model Token {
   revoked Boolean @default(false)
 }
 
+enum LuoguUserColor {
+  Cheater
+  Gray
+  Blue
+  Green
+  Orange
+  Red
+  Purple
+}
+
 model LuoguUser {
-  uid        Int     @id
+  uid        Int            @id
   name       String
   avatar     String
   slogan     String?
   badge      String?
   isAdmin    Boolean
   isBanned   Boolean
-  color      String
+  color      LuoguUserColor
   ccfLevel   Int
   background String?
   isRoot     Boolean

@@ -55,7 +55,7 @@ importers:
         version: 0.475.0(react@19.0.0)
       luogu-api-docs:
         specifier: github:0f-0b/luogu-api-docs
-        version: https://codeload.github.com/0f-0b/luogu-api-docs/tar.gz/e352b3ecaebf0910a8d058206c8f88d6ba1c3916
+        version: https://codeload.github.com/0f-0b/luogu-api-docs/tar.gz/3648270ea409efa75042f1fdf41df3701ddf6b91
       next:
         specifier: 15.1.6
         version: 15.1.6(@babel/core@7.26.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -2285,8 +2285,8 @@ packages:
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  luogu-api-docs@https://codeload.github.com/0f-0b/luogu-api-docs/tar.gz/e352b3ecaebf0910a8d058206c8f88d6ba1c3916:
-    resolution: {tarball: https://codeload.github.com/0f-0b/luogu-api-docs/tar.gz/e352b3ecaebf0910a8d058206c8f88d6ba1c3916}
+  luogu-api-docs@https://codeload.github.com/0f-0b/luogu-api-docs/tar.gz/3648270ea409efa75042f1fdf41df3701ddf6b91:
+    resolution: {tarball: https://codeload.github.com/0f-0b/luogu-api-docs/tar.gz/3648270ea409efa75042f1fdf41df3701ddf6b91}
     version: 0.0.0
 
   math-intrinsics@1.1.0:
@@ -5507,7 +5507,7 @@ snapshots:
     dependencies:
       react: 19.0.0
 
-  luogu-api-docs@https://codeload.github.com/0f-0b/luogu-api-docs/tar.gz/e352b3ecaebf0910a8d058206c8f88d6ba1c3916: {}
+  luogu-api-docs@https://codeload.github.com/0f-0b/luogu-api-docs/tar.gz/3648270ea409efa75042f1fdf41df3701ddf6b91: {}
 
   math-intrinsics@1.1.0: {}
 
