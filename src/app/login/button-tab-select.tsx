@@ -7,7 +7,12 @@ export default function ButtonTabSelect() {
   const { scrollPrev } = useCarousel();
 
   return (
-    <Button variant="outline" className="w-full md:hidden" onClick={scrollPrev}>
+    <Button
+      type="button"
+      variant="outline"
+      className="w-full md:hidden"
+      onClick={scrollPrev}
+    >
       选择已登录的账号
     </Button>
   );

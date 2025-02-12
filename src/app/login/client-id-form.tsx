@@ -19,8 +19,7 @@ import ButtonTabSelect from "./button-tab-select";
 export default function ClientIdForm({
   action,
   showSelectButton,
-  ...props
-}: Omit<React.ComponentProps<"form">, "action"> & {
+}: {
   action: (formData: FormSchema) => Promise<void>;
   showSelectButton: boolean;
 }) {
@@ -35,7 +34,7 @@ export default function ClientIdForm({
   return (
     <Form {...form}>
       {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-      <form {...props} onSubmit={form.handleSubmit(action)}>
+      <form onSubmit={form.handleSubmit(action)}>
         <div className="flex flex-col gap-6">
           <FormField
             control={form.control}
@@ -45,7 +44,6 @@ export default function ClientIdForm({
                 <FormLabel>用户 ID</FormLabel>
                 <FormControl>
                   <Input
-                    autoFocus
                     autoComplete="off"
                     className="number-field-no-arrow font-mono"
                     placeholder="_uid"

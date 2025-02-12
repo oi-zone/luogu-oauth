@@ -11,15 +11,13 @@ import ButtonTabLogin from "./button-tab-login";
 export default function SavedUsers({
   users,
   action,
-  ...props
 }: {
   users: number[];
   action: (uid: number) => Promise<void>;
-  className?: string;
 }) {
   return (
     <>
-      <Command {...props}>
+      <Command>
         <CommandInput placeholder="搜索保存的用户..." />
         <CommandList>
           <CommandEmpty>没有找到已保存的用户。</CommandEmpty>
