@@ -44,8 +44,8 @@ model AuthCode {
   codeChallenge       String?
   codeChallengeMethod CodeChallengeMethod?
   expiresAt           DateTime
-  user                User?                @relation(fields: [userId], references: [id])
-  userId              String?
+  user                LuoguUser            @relation(fields: [userId], references: [uid])
+  userId              Int
   client              Client               @relation(fields: [clientId], references: [id])
   clientId            String
   scopes              Scope[]
@@ -60,26 +60,42 @@ model Token {
   refreshTokenExpiresAt DateTime?
   client                Client    @relation(fields: [clientId], references: [id])
   clientId              String
-  user                  User?     @relation(fields: [userId], references: [id])
-  userId                String?
+  user                  LuoguUser @relation(fields: [userId], references: [uid])
+  userId                Int
   scopes                Scope[]
   originatingAuthCodeId String?
 
   revoked Boolean @default(false)
 }
 
-model User {
-  id       String @id
-  clientId String @unique
+model LuoguUser {
+  uid        Int     @id
+  name       String
+  avatar     String
+  slogan     String?
+  badge      String?
+  isAdmin    Boolean
+  isBanned   Boolean
+  color      String
+  ccfLevel   Int
+  background String?
+  isRoot     Boolean
+
+  updatedAt DateTime @updatedAt
+
+  sessions LuoguSession[]
 
   authCodes AuthCode[]
   tokens    Token[]
 }
 
-model Scope {
-  name String @id
+model LuoguSession {
+  clientId String    @id @db.Char(40)
+  uid      Int
+  user     LuoguUser @relation(fields: [uid], references: [uid])
+}
 
-  clients   Client[]
-  tokens    Token[]
-  authCodes AuthCode[]
+enum Scope {
+  user_info
+  client_id
 }

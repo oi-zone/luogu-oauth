@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import { SECRET_KEY } from "@/lib/constants";
 import { getIronSessionData } from "@/lib/session";
 import prisma from "@/lib/prisma";
+import { updateLuoguUserSummary } from "@/lib/luogu";
 import { formSchema, type FormSchema } from "./schemas";
 
 function redirectToAuthorize(query: string, uid: number) {
@@ -20,11 +21,15 @@ function redirectToAuthorize(query: string, uid: number) {
 export async function loginWithClientId(query: string, formData: FormSchema) {
   const { uid, clientId } = await formSchema.parseAsync(formData);
 
+  if (!(await updateLuoguUserSummary(uid))) throw new Error("User not found");
   // TODO: validate _uid and __client_id
-  await prisma.user.upsert({
-    where: { id: uid.toString() },
-    create: { id: uid.toString(), clientId },
-    update: { clientId },
+  await prisma.luoguUser.update({
+    where: { uid },
+    data: {
+      sessions: {
+        connectOrCreate: { where: { clientId }, create: { clientId } },
+      },
+    },
   });
 
   const session = await getIronSessionData();

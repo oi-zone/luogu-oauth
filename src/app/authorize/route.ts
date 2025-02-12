@@ -30,9 +30,10 @@ export async function GET(request: NextRequest) {
       request.nextUrl.searchParams.get("uid")!,
       SECRET_KEY,
     ) as { uid: number };
-    authRequest.user =
-      (await prisma.user.findUnique({ where: { id: uid.toString() } })) ??
-      undefined;
+    authRequest.user = {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      id: (await prisma.luoguUser.findUnique({ where: { uid } }))!.uid,
+    };
 
     authRequest.isAuthorizationApproved = true;
     const oauthResponse =

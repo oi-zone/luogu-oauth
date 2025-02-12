@@ -1,6 +1,6 @@
 import { randomBytes } from "node:crypto";
-import { AuthorizationServer } from "@jmondi/oauth2-server";
-import type { User } from "@prisma/client";
+import { AuthorizationServer, OAuthScope } from "@jmondi/oauth2-server";
+import { Scope, type Prisma } from "@prisma/client";
 import { SECRET_KEY } from "./constants";
 import prisma from "./prisma";
 
@@ -12,20 +12,69 @@ const generateRandomToken = (size = 32) =>
     });
   });
 
+const convert2PrismaScopes = (scopes: OAuthScope[]) =>
+  scopes.map(({ name }) => name as Scope);
+const convert2OAuthScopes = (scopes: Scope[]): OAuthScope[] =>
+  scopes.map((scope) => ({ name: scope }));
+
+// 这根本没法维护了，ts-oauth2-server 设计有问题
+const convertShit = <
+  T extends typeof prisma.token | typeof prisma.authCode,
+  D,
+>({
+  userId,
+  scopes,
+  client: { scopes: innerScopes, ...client },
+  ...data
+}: Prisma.Result<
+  T,
+  {
+    select: {
+      scopes: true;
+      userId: true;
+      client: {
+        select: {
+          id: true;
+          name: true;
+          secret: true;
+          redirectUris: true;
+          allowedGrants: true;
+          scopes: true;
+        };
+      };
+    };
+  },
+  "findFirstOrThrow"
+> &
+  D) => ({
+  user: { id: userId },
+  scopes: scopes.map((scope) => ({ name: scope })),
+  client: {
+    scopes: innerScopes.map((scope) => ({ name: scope })),
+    ...client,
+  },
+  ...data,
+});
+
 const authorizationServer = new AuthorizationServer(
   {
     getByIdentifier: (clientId) =>
-      prisma.client.findUniqueOrThrow({
-        where: { id: clientId },
-        select: {
-          id: true,
-          name: true,
-          secret: true,
-          redirectUris: true,
-          allowedGrants: true,
-          scopes: true,
-        },
-      }),
+      prisma.client
+        .findUniqueOrThrow({
+          where: { id: clientId },
+          select: {
+            id: true,
+            name: true,
+            secret: true,
+            redirectUris: true,
+            allowedGrants: true,
+            scopes: true,
+          },
+        })
+        .then(({ scopes, ...data }) => ({
+          scopes: convert2OAuthScopes(scopes),
+          ...data,
+        })),
     isClientValid: (grantType, client, clientSecret) =>
       Promise.resolve(
         client.allowedGrants.includes(grantType) &&
@@ -45,8 +94,8 @@ const authorizationServer = new AuthorizationServer(
         data: {
           ...accessToken,
           clientId: client.id,
-          userId: user?.id as string | undefined,
-          scopes: { connect: scopes },
+          userId: user?.id as number,
+          scopes: convert2PrismaScopes(scopes),
         },
       });
     },
@@ -65,31 +114,39 @@ const authorizationServer = new AuthorizationServer(
         })
         .then(({ revoked }) => revoked),
     getByRefreshToken: (refreshTokenToken) =>
-      prisma.token.findFirstOrThrow({
-        where: { refreshToken: refreshTokenToken },
-        select: {
-          accessToken: true,
-          accessTokenExpiresAt: true,
-          refreshToken: true,
-          refreshTokenExpiresAt: true,
-          client: {
-            select: {
-              id: true,
-              name: true,
-              secret: true,
-              redirectUris: true,
-              allowedGrants: true,
-              scopes: true,
+      prisma.token
+        .findFirstOrThrow({
+          where: { refreshToken: refreshTokenToken },
+          select: {
+            accessToken: true,
+            accessTokenExpiresAt: true,
+            refreshToken: true,
+            refreshTokenExpiresAt: true,
+            client: {
+              select: {
+                id: true,
+                name: true,
+                secret: true,
+                redirectUris: true,
+                allowedGrants: true,
+                scopes: true,
+              },
             },
+            userId: true,
+            scopes: true,
           },
-          user: true,
-          scopes: true,
-        },
-      }),
+        })
+        .then(convertShit),
   },
   {
     getAllByIdentifiers: (scopeNames) =>
-      prisma.scope.findMany({ where: { name: { in: scopeNames } } }),
+      Promise.resolve(
+        convert2OAuthScopes(
+          scopeNames.filter((scope) =>
+            Object.values(Scope).includes(scope as Scope),
+          ) as Scope[],
+        ),
+      ),
     finalize: (scopes) => Promise.resolve(scopes),
   },
   SECRET_KEY,
@@ -99,34 +156,37 @@ export default authorizationServer;
 authorizationServer.enableGrantType({
   grant: "authorization_code",
   userRepository: {
-    getUserByCredentials: async (identifier: string) =>
-      (await prisma.user.findUnique({ where: { id: identifier } })) ??
-      undefined,
+    getUserByCredentials: (identifier: number) =>
+      prisma.luoguUser
+        .findUnique({ where: { uid: identifier } })
+        .then((user) => (user ? { id: user.uid } : undefined)),
   },
   authCodeRepository: {
     getByIdentifier: (authCodeCode) =>
-      prisma.authCode.findUniqueOrThrow({
-        where: { code: authCodeCode },
-        select: {
-          code: true,
-          redirectUri: true,
-          codeChallenge: true,
-          codeChallengeMethod: true,
-          expiresAt: true,
-          user: true,
-          client: {
-            select: {
-              id: true,
-              name: true,
-              secret: true,
-              redirectUris: true,
-              allowedGrants: true,
-              scopes: true,
+      prisma.authCode
+        .findUniqueOrThrow({
+          where: { code: authCodeCode },
+          select: {
+            code: true,
+            redirectUri: true,
+            codeChallenge: true,
+            codeChallengeMethod: true,
+            expiresAt: true,
+            userId: true,
+            client: {
+              select: {
+                id: true,
+                name: true,
+                secret: true,
+                redirectUris: true,
+                allowedGrants: true,
+                scopes: true,
+              },
             },
+            scopes: true,
           },
-          scopes: true,
-        },
-      }),
+        })
+        .then(convertShit),
     issueAuthCode: async (client, user, scopes) => ({
       code: await generateRandomToken(),
       expiresAt: undefined as never,
@@ -138,9 +198,9 @@ authorizationServer.enableGrantType({
       await prisma.authCode.create({
         data: {
           ...authCode,
-          user: { connect: user as User | undefined },
+          user: { connect: { uid: user?.id as number } },
           client: { connect: { id: client.id } },
-          scopes: { connect: scopes },
+          scopes: convert2PrismaScopes(scopes),
         },
       });
     },
