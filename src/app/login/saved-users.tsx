@@ -1,4 +1,3 @@
-import { getIronSessionData } from "@/lib/session";
 import {
   Command,
   CommandEmpty,
@@ -8,19 +7,21 @@ import {
 } from "@/components/ui/command";
 import UserInfo from "@/components/user-info";
 
-export default async function SavedUsers({
+export default function SavedUsers({
+  users,
   action,
+  ...props
 }: {
+  users: number[];
   action: (uid: number) => Promise<void>;
+  className?: string;
 }) {
-  const session = await getIronSessionData();
-
   return (
-    <Command>
+    <Command {...props}>
       <CommandInput placeholder="搜索保存的用户..." />
       <CommandList>
         <CommandEmpty>没有找到已保存的用户。</CommandEmpty>
-        {Array.from(new Set(session.saved)).map((uid) => (
+        {users.map((uid) => (
           <CommandItem
             key={uid}
             keywords={[uid.toString()]}

@@ -34,12 +34,6 @@ export default function ClientIdForm({
       {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
       <form {...props} onSubmit={form.handleSubmit(action)}>
         <div className="flex flex-col gap-6">
-          <div className="flex flex-col items-center text-center">
-            <h1 className="text-2xl font-bold">欢迎回来</h1>
-            <p className="text-balance text-muted-foreground">
-              授权登录您的洛谷账号
-            </p>
-          </div>
           <FormField
             control={form.control}
             name="uid"
