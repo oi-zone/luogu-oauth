@@ -14,12 +14,15 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { formSchema, type FormSchema } from "./schemas";
+import ButtonTabSelect from "./button-tab-select";
 
 export default function ClientIdForm({
   action,
+  showSelectButton,
   ...props
 }: Omit<React.ComponentProps<"form">, "action"> & {
   action: (formData: FormSchema) => Promise<void>;
+  showSelectButton: boolean;
 }) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
@@ -43,7 +46,8 @@ export default function ClientIdForm({
                 <FormControl>
                   <Input
                     autoFocus
-                    className="font-mono"
+                    autoComplete="off"
+                    className="number-field-no-arrow font-mono"
                     placeholder="_uid"
                     type="number"
                     {...field}
@@ -70,6 +74,7 @@ export default function ClientIdForm({
                 </div>
                 <FormControl>
                   <Input
+                    autoComplete="off"
                     className="font-mono"
                     placeholder="__client_id"
                     {...field}
@@ -82,6 +87,7 @@ export default function ClientIdForm({
           <Button type="submit" className="w-full">
             登录
           </Button>
+          {showSelectButton && <ButtonTabSelect />}
           <div className="text-center text-sm">
             没有账号？
             <a
