@@ -80,3 +80,50 @@ body {
     -moz-appearance: textfield;
   }
 }
+
+.text-luogu-cheater {
+  @apply text-yellow-800;
+}
+.text-luogu-gray {
+  @apply text-gray-400;
+}
+.text-luogu-blue {
+  @apply text-sky-500;
+}
+.text-luogu-green {
+  @apply text-green-500;
+}
+.text-luogu-orange {
+  @apply text-orange-500;
+}
+.text-luogu-gold {
+  @apply text-amber-400;
+}
+.text-luogu-red {
+  @apply text-rose-500;
+}
+.text-luogu-purple {
+  @apply text-purple-500;
+}
+
+.bg-luogu-cheater {
+  @apply bg-yellow-800;
+}
+.bg-luogu-gray {
+  @apply bg-gray-400;
+}
+.bg-luogu-blue {
+  @apply bg-sky-500;
+}
+.bg-luogu-green {
+  @apply bg-green-500;
+}
+.bg-luogu-orange {
+  @apply bg-orange-500;
+}
+.bg-luogu-red {
+  @apply bg-rose-500;
+}
+.bg-luogu-purple {
+  @apply bg-purple-500;
+}
