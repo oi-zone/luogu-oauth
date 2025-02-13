@@ -79,6 +79,17 @@ enum LuoguUserColor {
 }
 
 model LuoguUser {
+  registerTime   DateTime           @db.Timestamp(0)
+  introduction   String?
+  prize          Json[]
+  elo            LuoguUserElo?
+  followingCount Int
+  followerCount  Int
+  ranking        Int?
+  eloValue       Int?
+  blogAddress    String?
+  practice       LuoguUserPractice?
+
   uid        Int            @id
   name       String
   avatar     String
@@ -99,10 +110,41 @@ model LuoguUser {
   tokens    Token[]
 }
 
+model LuoguUserPractice {
+  uid  Int       @id
+  user LuoguUser @relation(fields: [uid], references: [uid])
+
+  passedProblemCount    Int
+  submittedProblemCount Int
+
+  updatedAt DateTime @updatedAt
+}
+
+model LuoguUserElo {
+  uid  Int       @id
+  user LuoguUser @relation(fields: [uid], references: [uid])
+
+  contest LuoguContest @relation(fields: [contestId], references: [id])
+  rating  Int
+  time    DateTime     @db.Timestamp(0)
+  latest  Boolean
+
+  contestId Int
+}
+
 model LuoguSession {
   clientId String    @id @db.Char(40)
   uid      Int
   user     LuoguUser @relation(fields: [uid], references: [uid])
+}
+
+model LuoguContest {
+  id        Int      @id
+  name      String
+  startTime DateTime @db.Timestamp(0)
+  endTime   DateTime @db.Timestamp(0)
+
+  userElo LuoguUserElo[]
 }
 
 enum Scope {
