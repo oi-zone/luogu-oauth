@@ -16,6 +16,7 @@ import {
 import ClientIdForm from "./client-id-form";
 import { select } from "./actions";
 import SavedUsers from "./saved-users";
+import ButtonTabSelect from "./button-tab-select";
 
 export default async function Page({
   searchParams,
@@ -50,7 +51,9 @@ export default async function Page({
                   <CarouselItem
                     className={cn("p-6 md:p-8", twoCols && "md:basis-1/2")}
                   >
-                    <ClientIdForm />
+                    <ClientIdForm>
+                      {twoCols && <ButtonTabSelect />}
+                    </ClientIdForm>
                   </CarouselItem>
                 </CarouselContent>
               </Carousel>

@@ -17,9 +17,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { formSchema, type FormSchema } from "./schemas";
 import { loginWithClientId } from "./actions";
-import ButtonTabSelect from "./button-tab-select";
 
-export default function ClientIdForm() {
+export default function ClientIdForm({ children }: React.PropsWithChildren) {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") ?? "";
   const [state, formAction, pending] = useActionState(
@@ -97,7 +96,7 @@ export default function ClientIdForm() {
           <Button type="submit" className="w-full" disabled={pending}>
             登录
           </Button>
-          <ButtonTabSelect />
+          {children}
           <div className="text-center text-sm">
             没有账号？
             <a
