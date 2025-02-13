@@ -136,6 +136,9 @@ model LuoguSession {
   clientId String    @id @db.Char(40)
   uid      Int
   user     LuoguUser @relation(fields: [uid], references: [uid])
+
+  valid      Boolean  @default(true)
+  lastUsedAt DateTime @updatedAt
 }
 
 model LuoguContest {

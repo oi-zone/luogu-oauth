@@ -163,7 +163,17 @@ const authorizationServer = new AuthorizationServer(
           ) as Scope[],
         ),
       ),
-    finalize: (scopes) => Promise.resolve(scopes),
+    async finalize(scopes, identifier, client, user_id: number) {
+      if (
+        await prisma.luoguSession.findFirst({
+          where: { uid: user_id, valid: true },
+          select: {},
+        })
+      )
+        return scopes;
+      // 用户无有效会话
+      return scopes.filter(({ name }) => name === Scope.user_info);
+    },
   },
   SECRET_KEY,
 );
