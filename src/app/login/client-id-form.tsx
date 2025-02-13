@@ -1,5 +1,7 @@
 "use client";
 
+import { startTransition, useActionState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -14,15 +16,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { formSchema, type FormSchema } from "./schemas";
+import { loginWithClientId } from "./actions";
 import ButtonTabSelect from "./button-tab-select";
 
-export default function ClientIdForm({
-  action,
-  showSelectButton,
-}: {
-  action: (formData: FormSchema) => Promise<void>;
-  showSelectButton: boolean;
-}) {
+export default function ClientIdForm() {
+  const searchParams = useSearchParams();
+  const query = searchParams.get("query") ?? "";
+  const [state, formAction, pending] = useActionState(
+    loginWithClientId.bind(null, query),
+    undefined,
+  );
+
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,10 +35,16 @@ export default function ClientIdForm({
     },
   });
 
+  function submitAction(payload: FormSchema) {
+    startTransition(() => {
+      formAction(payload);
+    });
+  }
+
   return (
     <Form {...form}>
       {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-      <form onSubmit={form.handleSubmit(action)}>
+      <form onSubmit={form.handleSubmit(submitAction)}>
         <div className="flex flex-col gap-6">
           <FormField
             control={form.control}
@@ -82,10 +92,12 @@ export default function ClientIdForm({
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full">
+          {/* TODO: style */}
+          <FormMessage>{state?.message}</FormMessage>
+          <Button type="submit" className="w-full" disabled={pending}>
             登录
           </Button>
-          {showSelectButton && <ButtonTabSelect />}
+          <ButtonTabSelect />
           <div className="text-center text-sm">
             没有账号？
             <a

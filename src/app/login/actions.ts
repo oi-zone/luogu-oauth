@@ -4,9 +4,10 @@ import { redirect } from "next/navigation";
 import jwt from "jsonwebtoken";
 import { SECRET_KEY } from "@/lib/constants";
 import { getIronSessionData } from "@/lib/session";
-import prisma from "@/lib/prisma";
-import { updateLuoguUserSummary } from "@/lib/luogu";
+import { saveClientId } from "@/lib/luogu";
 import { formSchema, type FormSchema } from "./schemas";
+
+type FormState = { message: string } | undefined;
 
 function redirectToAuthorize(query: string, uid: number) {
   const urlSearchParams = new URLSearchParams(query);
@@ -18,19 +19,14 @@ function redirectToAuthorize(query: string, uid: number) {
   redirect(`/authorize?${urlSearchParams}`);
 }
 
-export async function loginWithClientId(query: string, formData: FormSchema) {
+export async function loginWithClientId(
+  query: string,
+  prevState: FormState,
+  formData: FormSchema,
+): Promise<FormState> {
   const { uid, clientId } = await formSchema.parseAsync(formData);
 
-  if (!(await updateLuoguUserSummary(uid))) throw new Error("User not found");
-  // TODO: validate _uid and __client_id
-  await prisma.luoguUser.update({
-    where: { uid },
-    data: {
-      sessions: {
-        connectOrCreate: { where: { clientId }, create: { clientId } },
-      },
-    },
-  });
+  if (!(await saveClientId(uid, clientId))) return { message: "登录失败" };
 
   const session = await getIronSessionData();
   session.saved = Array.from(new Set(session.saved).add(uid));

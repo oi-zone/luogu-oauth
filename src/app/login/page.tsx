@@ -14,7 +14,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import ClientIdForm from "./client-id-form";
-import { loginWithClientId, select } from "./actions";
+import { select } from "./actions";
 import SavedUsers from "./saved-users";
 
 export default async function Page({
@@ -50,10 +50,7 @@ export default async function Page({
                   <CarouselItem
                     className={cn("p-6 md:p-8", twoCols && "md:basis-1/2")}
                   >
-                    <ClientIdForm
-                      action={loginWithClientId.bind(null, query as string)}
-                      showSelectButton={twoCols}
-                    />
+                    <ClientIdForm />
                   </CarouselItem>
                 </CarouselContent>
               </Carousel>
