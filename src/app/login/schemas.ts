@@ -1,7 +1,9 @@
 import { z } from "zod";
 
+export const uidSchema = z.coerce.number().int().min(1);
+
 export const formSchema = z.object({
-  uid: z.coerce.number().int().min(1),
+  uid: uidSchema,
   clientId: z
     .string()
     .length(40)
@@ -9,3 +11,7 @@ export const formSchema = z.object({
 });
 
 export type FormSchema = z.infer<typeof formSchema>;
+
+export const verificationLoginFormSchema = z.object({
+  uid: uidSchema,
+});

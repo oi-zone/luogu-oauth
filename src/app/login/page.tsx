@@ -17,6 +17,7 @@ import ClientIdForm from "./client-id-form";
 import { select } from "./actions";
 import SavedUsers from "./saved-users";
 import ButtonTabSelect from "./button-tab-select";
+import VerificationLoginForm from "./verification-login-form";
 
 export default async function Page({
   searchParams,
@@ -49,11 +50,30 @@ export default async function Page({
                     </CarouselItem>
                   )}
                   <CarouselItem
-                    className={cn("p-6 md:p-8", twoCols && "md:basis-1/2")}
+                    className={cn(
+                      "space-y-6 p-6 md:p-8",
+                      twoCols && "md:basis-1/2",
+                    )}
                   >
-                    <ClientIdForm>
-                      {twoCols && <ButtonTabSelect />}
-                    </ClientIdForm>
+                    <ClientIdForm />
+                    <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+                      <span className="relative z-10 bg-background px-2 text-muted-foreground">
+                        Or continue with
+                      </span>
+                    </div>
+                    <VerificationLoginForm />
+                    {twoCols && <ButtonTabSelect />}
+                    <div className="text-center text-sm">
+                      没有账号？
+                      <a
+                        href="https://www.luogu.com.cn/auth/register"
+                        className="underline underline-offset-4"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        注册
+                      </a>
+                    </div>
                   </CarouselItem>
                 </CarouselContent>
               </Carousel>
