@@ -39,6 +39,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.20.0",
+    "@tailwindcss/postcss": "^4.0.6",
     "@types/jsonwebtoken": "^9.0.8",
     "@types/node": "^20.17.19",
     "@types/oidc-provider": "^8.5.2",
@@ -50,12 +51,11 @@
     "eslint-plugin-react": "^7.37.4",
     "husky": "^9.1.7",
     "lint-staged": "^15.4.3",
-    "postcss": "^8.5.2",
     "prettier": "^3.5.1",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "prisma": "^6.3.1",
-    "shadcn": "^2.3.0",
-    "tailwindcss": "^3.4.17",
+    "shadcn": "2.4.0-canary.6",
+    "tailwindcss": "^4.0.6",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.24.0"
   },

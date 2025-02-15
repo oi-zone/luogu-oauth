@@ -30,7 +30,7 @@ export default async function Page({
   const twoCols = saved.length > 0;
 
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10">
+    <div className="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
       <div className={cn("w-full max-w-sm", twoCols && "md:max-w-3xl")}>
         <div className="flex flex-col gap-6">
           <Card>
@@ -56,8 +56,8 @@ export default async function Page({
                     )}
                   >
                     <ClientIdForm />
-                    <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-                      <span className="relative z-10 bg-background px-2 text-muted-foreground">
+                    <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
+                      <span className="bg-background text-muted-foreground relative z-10 px-2">
                         Or continue with
                       </span>
                     </div>
@@ -79,7 +79,7 @@ export default async function Page({
               </Carousel>
             </CardContent>
           </Card>
-          <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
+          <div className="text-muted-foreground hover:[&_a]:text-primary text-center text-xs text-balance [&_a]:underline [&_a]:underline-offset-4">
             By clicking continue, you agree to our{" "}
             <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
           </div>

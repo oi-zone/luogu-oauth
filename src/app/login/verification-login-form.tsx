@@ -90,11 +90,11 @@ export default function VerificationLoginForm() {
               disabled={expired}
             />
             <Progress.Root
-              className="absolute left-0 top-0 h-full w-full overflow-hidden rounded-md"
+              className="absolute top-0 left-0 h-full w-full overflow-hidden rounded-md"
               value={progress}
             >
               <Progress.Indicator
-                className="h-full bg-input transition-all"
+                className="bg-input h-full transition-all"
                 style={{ width: `${progress.toString()}%` }}
               />
             </Progress.Root>
@@ -109,9 +109,9 @@ export default function VerificationLoginForm() {
               获取验证码
             </Button>
             {expired && (
-              <span className="absolute right-0 top-0 -mr-1 -mt-1 flex h-3 w-3">
+              <span className="absolute top-0 right-0 -mt-1 -mr-1 flex size-3">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"></span>
-                <span className="relative inline-flex h-3 w-3 rounded-full bg-sky-500"></span>
+                <span className="relative inline-flex size-3 rounded-full bg-sky-500"></span>
               </span>
             )}
           </div>
