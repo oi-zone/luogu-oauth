@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="dev" type="NodeJSConfigurationType" application-parameters="dev" path-to-js-file="node_modules/next/dist/bin/next" working-dir="$PROJECT_DIR$">
+    <envs>
+      <env name="PORT" value="3000" />
+    </envs>
+    <EXTENSION ID="com.intellij.lang.javascript.buildTools.npm.rc.StartBrowserRunConfigurationExtension">
+      <browser start="true" with-js-debugger="true" url="http://localhost:3000/" />
+    </EXTENSION>
+    <method v="2" />
+  </configuration>
+</component>
