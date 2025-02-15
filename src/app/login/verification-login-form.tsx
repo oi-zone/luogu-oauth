@@ -22,6 +22,8 @@ import { generateToken, loginWithVerification } from "./actions";
 
 export default function VerificationLoginForm() {
   const [token, setToken] = useState("");
+  const newToken = () => generateToken().then(setToken);
+
   const [code, setCode] = useState<{
     txt: string;
     iat: number;
@@ -32,24 +34,28 @@ export default function VerificationLoginForm() {
   }, [token]);
 
   const [progress, setProgress] = useState(100);
+  const expired = progress === 100;
   useEffect(() => {
-    if (code) setProgress(0);
-  }, [code]);
-  useEffect(() => {
-    if (progress < 100 && code) {
-      const timeout = setTimeout(() => {
-        setProgress(
-          Math.min(
-            (new Date().getTime() / 1000 - code.iat) / (code.exp - code.iat),
-            1,
-          ) * 100,
-        );
-      }, 1000);
+    if (code) {
+      const updateProgress = () => {
+        const percentage =
+          ((new Date().getTime() / 1000 - code.iat) / (code.exp - code.iat)) *
+          100;
+        setProgress(Math.min(percentage, 100));
+        if (percentage >= 100) clearInterval(timeout);
+      };
+      const timeout = setInterval(updateProgress, 1000);
+      updateProgress();
       return () => {
-        clearTimeout(timeout);
+        clearInterval(timeout);
       };
     }
-  }, [code, progress]);
+  }, [code]);
+
+  // 自动刷新验证码
+  useEffect(() => {
+    if (progress === 100) startTransition(newToken);
+  }, [progress]);
 
   const searchParams = useSearchParams();
   const query = searchParams.get("query") ?? "";
@@ -60,9 +66,7 @@ export default function VerificationLoginForm() {
 
   const form = useForm<z.infer<typeof verificationLoginFormSchema>>({
     resolver: zodResolver(verificationLoginFormSchema),
-    defaultValues: {
-      uid: "" as never,
-    },
+    defaultValues: { uid: "" as never },
   });
 
   const submitAction: Parameters<typeof form.handleSubmit>[0] = (payload) => {
@@ -70,8 +74,6 @@ export default function VerificationLoginForm() {
       formAction(payload);
     });
   };
-
-  const expired = !code || progress === 100;
 
   return (
     <Form {...form}>
@@ -99,22 +101,14 @@ export default function VerificationLoginForm() {
               />
             </Progress.Root>
           </div>
-          <div className="relative inline-flex">
-            <Button
-              type="button"
-              variant="secondary"
-              // eslint-disable-next-line @typescript-eslint/no-misused-promises
-              onClick={() => generateToken().then(setToken)}
-            >
-              获取验证码
-            </Button>
-            {expired && (
-              <span className="absolute top-0 right-0 -mt-1 -mr-1 flex size-3">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"></span>
-                <span className="relative inline-flex size-3 rounded-full bg-sky-500"></span>
-              </span>
-            )}
-          </div>
+          <Button
+            type="button"
+            variant="secondary"
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            onClick={newToken}
+          >
+            获取验证码
+          </Button>
         </div>
         <FormField
           control={form.control}
@@ -137,7 +131,7 @@ export default function VerificationLoginForm() {
         />
         {/* TODO: style */}
         <FormMessage>{state?.message}</FormMessage>
-        <Button type="submit" className="w-full" disabled={pending || expired}>
+        <Button type="submit" className="w-full" disabled={pending}>
           检查
         </Button>
       </form>
