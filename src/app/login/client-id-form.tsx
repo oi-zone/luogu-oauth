@@ -56,7 +56,7 @@ export default function ClientIdForm() {
               <FormControl>
                 <Input
                   autoComplete="off"
-                  className="number-field-no-arrow font-mono"
+                  className="number-field-no-arrow"
                   placeholder="_uid"
                   type="number"
                   {...field}
@@ -84,7 +84,6 @@ export default function ClientIdForm() {
               <FormControl>
                 <Input
                   autoComplete="off"
-                  className="font-mono"
                   placeholder="__client_id"
                   {...field}
                 />

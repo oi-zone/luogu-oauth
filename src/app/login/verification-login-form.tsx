@@ -85,7 +85,7 @@ export default function VerificationLoginForm() {
         <div className="flex w-full gap-2">
           <div className="relative flex-grow">
             <Input
-              className="relative z-10"
+              className="relative z-10 font-mono"
               type="text"
               value={code?.txt ?? ""}
               readOnly
