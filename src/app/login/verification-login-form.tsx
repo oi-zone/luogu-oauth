@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import jwt from "jsonwebtoken";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Progress from "@radix-ui/react-progress";
@@ -18,18 +18,25 @@ import useLoginForm from "@/hooks/use-login-form";
 import { verificationLoginFormSchema } from "./schemas";
 import { generateToken, loginWithVerification } from "./actions";
 
+interface Code {
+  txt: string;
+  iat: number;
+  exp: number;
+}
+
 export default function VerificationLoginForm() {
   const [token, setToken] = useState("");
-  const newToken = () => generateToken().then(setToken);
-
-  const [code, setCode] = useState<{
-    txt: string;
-    iat: number;
-    exp: number;
-  } | null>(null);
-  useEffect(() => {
-    if (token) setCode(jwt.decode(token) as typeof code);
-  }, [token]);
+  const [code, setCode] = useState<Code | null>(null);
+  const [generating, startGeneration] = useTransition();
+  const newToken = () => {
+    startGeneration(async () => {
+      const reqTime = new Date().getTime() / 1000;
+      const token = await generateToken();
+      setToken(token);
+      const { txt, iat, exp } = jwt.decode(token) as Code;
+      setCode({ txt, iat: reqTime, exp: reqTime - iat + exp });
+    });
+  };
 
   const [progress, setProgress] = useState(100);
   const expired = progress === 100;
@@ -52,7 +59,7 @@ export default function VerificationLoginForm() {
 
   // 自动刷新验证码
   useEffect(() => {
-    if (progress === 100) startTransition(newToken);
+    if (progress === 100) newToken();
   }, [progress]);
 
   const [form, state, formAction, pending] = useLoginForm(
@@ -92,8 +99,8 @@ export default function VerificationLoginForm() {
           <Button
             type="button"
             variant="secondary"
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onClick={newToken}
+            disabled={generating}
           >
             获取验证码
           </Button>
