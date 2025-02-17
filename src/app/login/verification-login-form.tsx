@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
+import { Noto_Serif_TC } from "next/font/google";
 import jwt from "jsonwebtoken";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Progress from "@radix-ui/react-progress";
 import {
@@ -18,6 +20,8 @@ import useLoginForm from "@/hooks/use-login-form";
 import { verificationLoginFormSchema } from "./schemas";
 import { generateToken, loginWithVerification } from "./actions";
 import { ClipboardCopy, RotateCw } from "lucide-react";
+
+const notoSerif = Noto_Serif_TC({ subsets: [] });
 
 interface Code {
   txt: string;
@@ -84,14 +88,13 @@ export default function VerificationLoginForm() {
               <FormLabel>验证码</FormLabel>
               <FormControl>
                 <Input
-                  className="relative z-10 pe-8 font-mono"
+                  className={cn("relative z-10 pe-8", notoSerif.className)}
                   type="text"
                   value={code?.txt ?? ""}
                   readOnly
                   disabled={expired}
                 />
               </FormControl>
-              <FormMessage />
             </FormItem>
             <Progress.Root
               className="absolute bottom-0 left-0 h-9 w-full overflow-hidden rounded-md"
