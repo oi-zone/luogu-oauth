@@ -1,10 +1,6 @@
 "use client";
 
-import { startTransition, useActionState } from "react";
-import { useSearchParams } from "next/navigation";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,37 +11,25 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { formSchema, type FormSchema } from "./schemas";
+import useLoginForm from "@/hooks/use-login-form";
+import { formSchema } from "./schemas";
 import { loginWithClientId } from "./actions";
 
 export default function ClientIdForm() {
-  const searchParams = useSearchParams();
-  const query = searchParams.get("query") ?? "";
-  const [state, formAction, pending] = useActionState(
-    loginWithClientId.bind(null, query),
-    undefined,
-  );
-
-  const form = useForm<FormSchema>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      uid: "" as never,
-      clientId: "",
+  const [form, state, formAction, pending] = useLoginForm(
+    {
+      resolver: zodResolver(formSchema),
+      defaultValues: { uid: "" as never, clientId: "" },
     },
-  });
-
-  function submitAction(payload: FormSchema) {
-    startTransition(() => {
-      formAction(payload);
-    });
-  }
+    loginWithClientId,
+  );
 
   return (
     <Form {...form}>
       <form
         className="flex flex-col gap-6"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onSubmit={form.handleSubmit(submitAction)}
+        onSubmit={formAction}
       >
         <FormField
           control={form.control}

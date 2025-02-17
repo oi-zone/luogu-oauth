@@ -1,11 +1,8 @@
 "use client";
 
-import { startTransition, useActionState, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { startTransition, useEffect, useState } from "react";
 import jwt from "jsonwebtoken";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { z } from "zod";
 import * as Progress from "@radix-ui/react-progress";
 import {
   Form,
@@ -17,6 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import useLoginForm from "@/hooks/use-login-form";
 import { verificationLoginFormSchema } from "./schemas";
 import { generateToken, loginWithVerification } from "./actions";
 
@@ -57,30 +55,20 @@ export default function VerificationLoginForm() {
     if (progress === 100) startTransition(newToken);
   }, [progress]);
 
-  const searchParams = useSearchParams();
-  const query = searchParams.get("query") ?? "";
-  const [state, formAction, pending] = useActionState(
-    loginWithVerification.bind(null, query, token),
-    undefined,
+  const [form, state, formAction, pending] = useLoginForm(
+    {
+      resolver: zodResolver(verificationLoginFormSchema),
+      defaultValues: { uid: "" as never },
+    },
+    loginWithVerification.bind(null, token),
   );
-
-  const form = useForm<z.infer<typeof verificationLoginFormSchema>>({
-    resolver: zodResolver(verificationLoginFormSchema),
-    defaultValues: { uid: "" as never },
-  });
-
-  const submitAction: Parameters<typeof form.handleSubmit>[0] = (payload) => {
-    startTransition(() => {
-      formAction(payload);
-    });
-  };
 
   return (
     <Form {...form}>
       <form
         className="flex flex-col gap-6"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onSubmit={form.handleSubmit(submitAction)}
+        onSubmit={formAction}
       >
         <div className="flex w-full gap-2">
           <div className="relative flex-grow">

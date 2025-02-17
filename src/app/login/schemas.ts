@@ -10,8 +10,6 @@ export const formSchema = z.object({
     .regex(/^[0-9a-f]+$/),
 });
 
-export type FormSchema = z.infer<typeof formSchema>;
-
 export const verificationLoginFormSchema = z.object({
   uid: uidSchema,
 });

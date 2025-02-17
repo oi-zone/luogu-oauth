@@ -6,13 +6,8 @@ import { z } from "zod";
 import { SECRET_KEY } from "@/lib/constants";
 import { getIronSessionData } from "@/lib/session";
 import { saveClientId, updateLuoguUserSummary } from "@/lib/luogu";
-import {
-  formSchema,
-  type FormSchema,
-  verificationLoginFormSchema,
-} from "./schemas";
-
-type FormState = { message: string } | undefined;
+import type { LoginFormState } from "@/hooks/use-login-form";
+import { formSchema, verificationLoginFormSchema } from "./schemas";
 
 function redirectToAuthorize(query: string, uid: number) {
   const urlSearchParams = new URLSearchParams(query);
@@ -32,9 +27,9 @@ async function saveUser(uid: number) {
 
 export async function loginWithClientId(
   query: string,
-  prevState: FormState,
-  formData: FormSchema,
-): Promise<FormState> {
+  prevState: LoginFormState,
+  formData: z.infer<typeof formSchema>,
+): Promise<LoginFormState> {
   const { uid, clientId } = await formSchema.parseAsync(formData);
   if (!(await saveClientId(uid, clientId))) return { message: "登录失败" };
   await saveUser(uid);
@@ -46,11 +41,11 @@ export const generateToken = async (): Promise<string> =>
   Promise.resolve(jwt.sign({ txt: "Hello" }, SECRET_KEY, { expiresIn: "1m" }));
 
 export async function loginWithVerification(
-  query: string,
   token: string,
-  prevState: FormState,
+  query: string,
+  prevState: LoginFormState,
   formData: z.infer<typeof verificationLoginFormSchema>,
-): Promise<FormState> {
+): Promise<LoginFormState> {
   const { uid } = await verificationLoginFormSchema.parseAsync(formData);
   const { txt: code } = await z
     .object({ txt: z.string() })
