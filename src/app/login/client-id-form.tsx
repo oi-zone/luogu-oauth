@@ -76,7 +76,7 @@ export default function ClientIdForm() {
                 <FormLabel>Client ID</FormLabel>
                 <a
                   href="#"
-                  className="ml-auto text-sm underline-offset-2 hover:underline"
+                  className="ml-auto text-sm leading-0 underline-offset-2 hover:underline"
                 >
                   这是什么？
                 </a>
@@ -94,7 +94,11 @@ export default function ClientIdForm() {
         />
         {/* TODO: style */}
         <FormMessage>{state?.message}</FormMessage>
-        <Button type="submit" className="w-full" disabled={pending}>
+        <Button
+          type="submit"
+          className="w-full cursor-pointer"
+          disabled={pending}
+        >
           登录
         </Button>
       </form>

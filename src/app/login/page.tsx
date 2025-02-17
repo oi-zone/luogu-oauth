@@ -18,6 +18,7 @@ import { select } from "./actions";
 import SavedUsers from "./saved-users";
 import ButtonTabSelect from "./button-tab-select";
 import VerificationLoginForm from "./verification-login-form";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default async function Page({
   searchParams,
@@ -55,13 +56,28 @@ export default async function Page({
                       twoCols && "md:basis-1/2",
                     )}
                   >
-                    <ClientIdForm />
-                    <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
-                      <span className="bg-background text-muted-foreground relative z-10 px-2">
-                        Or continue with
-                      </span>
-                    </div>
-                    <VerificationLoginForm />
+                    <Tabs defaultValue="client-id-form" className="w-full">
+                      <TabsList className="mb-6 grid w-full grid-cols-2">
+                        <TabsTrigger
+                          className="cursor-pointer"
+                          value="client-id-form"
+                        >
+                          Cookie 登录
+                        </TabsTrigger>
+                        <TabsTrigger
+                          className="cursor-pointer"
+                          value="verification-login-form"
+                        >
+                          验证码登录
+                        </TabsTrigger>
+                      </TabsList>
+                      <TabsContent value="client-id-form">
+                        <ClientIdForm />
+                      </TabsContent>
+                      <TabsContent value="verification-login-form">
+                        <VerificationLoginForm />
+                      </TabsContent>
+                    </Tabs>
                     {twoCols && <ButtonTabSelect />}
                     <div className="text-center text-sm">
                       没有账号？

@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { verificationLoginFormSchema } from "./schemas";
 import { generateToken, loginWithVerification } from "./actions";
+import { ClipboardCopy, RotateCw } from "lucide-react";
 
 export default function VerificationLoginForm() {
   const [token, setToken] = useState("");
@@ -82,17 +83,23 @@ export default function VerificationLoginForm() {
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={form.handleSubmit(submitAction)}
       >
-        <div className="flex w-full gap-2">
+        <div className="flex w-full items-end gap-2">
           <div className="relative flex-grow">
-            <Input
-              className="relative z-10 font-mono"
-              type="text"
-              value={code?.txt ?? ""}
-              readOnly
-              disabled={expired}
-            />
+            <FormItem>
+              <FormLabel>验证码</FormLabel>
+              <FormControl>
+                <Input
+                  className="relative z-10 pe-8 font-mono"
+                  type="text"
+                  value={code?.txt ?? ""}
+                  readOnly
+                  disabled={expired}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
             <Progress.Root
-              className="absolute top-0 left-0 h-full w-full overflow-hidden rounded-md"
+              className="absolute bottom-0 left-0 h-9 w-full overflow-hidden rounded-md"
               value={progress}
             >
               <Progress.Indicator
@@ -100,14 +107,24 @@ export default function VerificationLoginForm() {
                 style={{ width: `${progress.toString()}%` }}
               />
             </Progress.Root>
+            <Button
+              className="absolute right-0 bottom-0 z-10 cursor-pointer text-gray-400 hover:text-gray-500"
+              type="button"
+              variant="link"
+              size="icon"
+            >
+              <ClipboardCopy />
+            </Button>
           </div>
           <Button
+            className="cursor-pointer"
             type="button"
-            variant="secondary"
+            variant="outline"
+            size="icon"
             // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onClick={newToken}
           >
-            获取验证码
+            <RotateCw />
           </Button>
         </div>
         <FormField
@@ -131,7 +148,11 @@ export default function VerificationLoginForm() {
         />
         {/* TODO: style */}
         <FormMessage>{state?.message}</FormMessage>
-        <Button type="submit" className="w-full" disabled={pending}>
+        <Button
+          type="submit"
+          className="w-full cursor-pointer"
+          disabled={pending}
+        >
           检查
         </Button>
       </form>
