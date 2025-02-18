@@ -30,10 +30,15 @@ interface Code {
   exp: number;
 }
 
+const formatTime = (seconds: number): string =>
+  `${Math.floor(seconds / 60).toString()}:${(seconds % 60).toString().padStart(2, "0")}`;
+
 export default function VerificationLoginForm() {
   const [token, setToken] = useState("");
   const [code, setCode] = useState<Code | null>(null);
   const [generating, startGeneration] = useTransition();
+  const [remainingTime, setRemainingTime] = useState(0);
+
   const newToken = () => {
     startGeneration(async () => {
       const reqTime = new Date().getTime() / 1000;
@@ -41,6 +46,7 @@ export default function VerificationLoginForm() {
       setToken(token);
       const { txt, iat, exp } = jwt.decode(token) as Code;
       setCode({ txt, iat: reqTime, exp: reqTime - iat + exp });
+      setRemainingTime(reqTime - iat + exp);
     });
   };
 
@@ -49,10 +55,10 @@ export default function VerificationLoginForm() {
   useEffect(() => {
     if (code) {
       const updateProgress = () => {
-        const percentage =
-          ((new Date().getTime() / 1000 - code.iat) / (code.exp - code.iat)) *
-          100;
+        const now = new Date().getTime() / 1000;
+        const percentage = ((now - code.iat) / (code.exp - code.iat)) * 100;
         setProgress(Math.min(percentage, 100));
+        setRemainingTime(Math.max(code.exp - now, 0));
         if (percentage >= 100) clearInterval(timeout);
       };
       const timeout = setInterval(updateProgress, 1000);
@@ -94,7 +100,7 @@ export default function VerificationLoginForm() {
               <FormControl>
                 <Input
                   ref={codeInputRef}
-                  className={cn("relative z-10 pe-8", notoSerif.className)}
+                  className={cn("relative z-10 pe-17", notoSerif.className)}
                   type="text"
                   value={code?.txt ?? ""}
                   readOnly
@@ -110,22 +116,30 @@ export default function VerificationLoginForm() {
                   style={{ width: `${progress.toString()}%` }}
                 />
               </Progress.Root>
-              <Button
-                className="absolute right-0 bottom-0 z-10 cursor-pointer text-gray-400 hover:text-gray-500"
-                type="button"
-                variant="link"
-                size="icon"
-                onClick={() => {
-                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                  const input = codeInputRef.current!;
-                  input.select();
-                  startCopy(() => navigator.clipboard.writeText(input.value));
-                }}
-                disabled={copying}
-                aria-label="复制"
-              >
-                <ClipboardCopy aria-disabled />
-              </Button>
+              <div className="absolute right-0 bottom-0 z-10">
+                <span
+                  className="relative font-mono text-sm text-gray-400 select-none"
+                  style={{ bottom: ".17rem" }}
+                >
+                  {formatTime(Math.ceil(remainingTime))}
+                </span>
+                <Button
+                  className="cursor-pointer text-gray-400 hover:text-gray-500"
+                  type="button"
+                  variant="link"
+                  size="icon"
+                  onClick={() => {
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    const input = codeInputRef.current!;
+                    input.select();
+                    startCopy(() => navigator.clipboard.writeText(input.value));
+                  }}
+                  disabled={copying}
+                  aria-label="复制"
+                >
+                  <ClipboardCopy aria-disabled />
+                </Button>
+              </div>
             </div>
             <Button
               className="cursor-pointer"

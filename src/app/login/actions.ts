@@ -1,5 +1,6 @@
 "use server";
 
+import { randomInt } from "crypto";
 import { redirect } from "next/navigation";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
@@ -19,7 +20,6 @@ function redirectToAuthorize(query: string, uid: number) {
 
   redirect(`/authorize?${urlSearchParams}`);
 }
-import { customAlphabet } from "nanoid";
 
 async function saveUser(uid: number) {
   const session = await getIronSessionData();
@@ -38,15 +38,42 @@ export async function loginWithClientId(
   redirectToAuthorize(query, uid);
 }
 
+function generateTokenFragment(alphabet: string, size: number): string {
+  let maxSeed = alphabet.length;
+  for (let i = 1; i < size; i++) maxSeed *= alphabet.length - i;
+
+  let seed = randomInt(maxSeed);
+  let result = "";
+
+  for (let i = 0; i < size; i++) {
+    const curChar = alphabet[seed % alphabet.length];
+    result += curChar;
+    seed = Math.floor(seed / alphabet.length);
+    alphabet = alphabet
+      .split("")
+      .filter((c) => c != curChar)
+      .join("");
+  }
+
+  return result;
+}
+
 export const generateToken = async (): Promise<string> => {
-  const token = customAlphabet(ALPHABET, 12)();
+  const tokenFrag1 = generateTokenFragment(ALPHABET, 4);
+  const tokenFrag2 = generateTokenFragment(
+    ALPHABET.split("")
+      .filter((c) => !tokenFrag1.includes(c))
+      .join(""),
+    4,
+  );
+
   return Promise.resolve(
     jwt.sign(
       {
-        txt: `${token.substring(0, 4)}，${token.substring(4, 8)}，${token.substring(8, 12)}。`,
+        txt: `${tokenFrag1}，${tokenFrag2}。`,
       },
       SECRET_KEY,
-      { expiresIn: "1m" },
+      { expiresIn: "90s" },
     ),
   );
 };
