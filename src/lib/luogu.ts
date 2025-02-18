@@ -91,9 +91,9 @@ async function upsertLuoguUserInfo(
   return luoguUser;
 }
 
-export async function updateLuoguUserSummary(uid: number) {
+export async function updateLuoguUserSummary(uid: number, cache = 3600000) {
   const luoguUser = await prisma.luoguUser.findUnique({
-    where: { uid, updatedAt: { gte: new Date(Date.now() - 3600000) } },
+    where: { uid, updatedAt: { gte: new Date(Date.now() - cache) } },
   });
   if (luoguUser) return luoguUser;
   const response = await fetch(

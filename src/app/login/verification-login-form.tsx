@@ -4,7 +4,6 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { Noto_Serif_TC } from "next/font/google";
 import { ClipboardCopy, RotateCw } from "lucide-react";
 import jwt from "jsonwebtoken";
-import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Progress from "@radix-ui/react-progress";
 import {
@@ -19,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import useLoginForm from "@/hooks/use-login-form";
+import { cn } from "@/lib/utils";
 import { verificationLoginFormSchema } from "./schemas";
 import { generateToken, loginWithVerification } from "./actions";
 
@@ -26,6 +26,7 @@ const notoSerif = Noto_Serif_TC({ subsets: [] });
 
 interface Code {
   txt: string;
+  refresh: number;
   iat: number;
   exp: number;
 }
@@ -34,7 +35,7 @@ const formatTime = (seconds: number): string =>
   `${Math.floor(seconds / 60).toString()}:${(seconds % 60).toString().padStart(2, "0")}`;
 
 export default function VerificationLoginForm() {
-  const [token, setToken] = useState("");
+  const [tokens, setTokens] = useState<string[]>([]);
   const [code, setCode] = useState<Code | null>(null);
   const [generating, startGeneration] = useTransition();
   const [remainingTime, setRemainingTime] = useState(0);
@@ -43,23 +44,22 @@ export default function VerificationLoginForm() {
     startGeneration(async () => {
       const reqTime = new Date().getTime() / 1000;
       const token = await generateToken();
-      setToken(token);
-      const { txt, iat, exp } = jwt.decode(token) as Code;
-      setCode({ txt, iat: reqTime, exp: reqTime - iat + exp });
+      setTokens((prev) => [...prev, token]);
+      const { iat, exp, ...code } = jwt.decode(token) as Code;
+      setCode({ ...code, iat: reqTime, exp: reqTime - iat + exp });
       setRemainingTime(reqTime - iat + exp);
     });
   };
 
   const [progress, setProgress] = useState(100);
-  const expired = progress === 100;
   useEffect(() => {
     if (code) {
       const updateProgress = () => {
         const now = new Date().getTime() / 1000;
-        const percentage = ((now - code.iat) / (code.exp - code.iat)) * 100;
+        const percentage = ((now - code.iat) / code.refresh) * 100;
         setProgress(Math.min(percentage, 100));
         setRemainingTime(Math.max(code.exp - now, 0));
-        if (percentage >= 100) clearInterval(timeout);
+        if (now >= code.exp) clearInterval(timeout);
       };
       const timeout = setInterval(updateProgress, 1000);
       updateProgress();
@@ -83,7 +83,7 @@ export default function VerificationLoginForm() {
       resolver: zodResolver(verificationLoginFormSchema),
       defaultValues: { uid: "" as never },
     },
-    loginWithVerification.bind(null, token),
+    loginWithVerification.bind(null, tokens),
   );
 
   return (
@@ -95,7 +95,7 @@ export default function VerificationLoginForm() {
       >
         <FormItem>
           <FormLabel>验证码</FormLabel>
-          <div className="flex w-full items-end gap-2">
+          <div className="flex w-full gap-2">
             <div className="relative flex-grow">
               <FormControl>
                 <Input
@@ -104,7 +104,7 @@ export default function VerificationLoginForm() {
                   type="text"
                   value={code?.txt ?? ""}
                   readOnly
-                  disabled={expired}
+                  disabled={!code}
                 />
               </FormControl>
               <Progress.Root

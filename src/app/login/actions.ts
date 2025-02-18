@@ -4,7 +4,11 @@ import { randomInt } from "crypto";
 import { redirect } from "next/navigation";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
-import { SECRET_KEY } from "@/lib/constants";
+import {
+  SECRET_KEY,
+  VERIFICATION_CODE_EXPIRES_IN,
+  VERIFICATION_CODE_REFRESH_INTERVAL,
+} from "@/lib/constants";
 import { getIronSessionData } from "@/lib/session";
 import { saveClientId, updateLuoguUserSummary } from "@/lib/luogu";
 import type { LoginFormState } from "@/hooks/use-login-form";
@@ -71,27 +75,44 @@ export const generateToken = async (): Promise<string> => {
     jwt.sign(
       {
         txt: `${tokenFrag1}，${tokenFrag2}。`,
+        refresh: VERIFICATION_CODE_REFRESH_INTERVAL,
       },
       SECRET_KEY,
-      { expiresIn: "90s" },
+      { expiresIn: VERIFICATION_CODE_EXPIRES_IN },
     ),
   );
 };
 
+const verificationJwtSchema = z
+  .array(z.string())
+  .transform((tokens) =>
+    tokens
+      .map((token) => {
+        try {
+          return jwt.verify(token, SECRET_KEY);
+        } catch {
+          return null;
+        }
+      })
+      .filter(Boolean),
+  )
+  .pipe(z.array(z.object({ txt: z.string() })));
+
 export async function loginWithVerification(
-  token: string,
+  tokens: string[],
   query: string,
   prevState: LoginFormState,
   formData: z.infer<typeof verificationLoginFormSchema>,
 ): Promise<LoginFormState> {
   const { uid } = await verificationLoginFormSchema.parseAsync(formData);
-  const { txt: code } = await z
-    .object({ txt: z.string() })
-    .parseAsync(jwt.verify(token, SECRET_KEY));
+  const codes = await verificationJwtSchema.parseAsync(tokens);
 
-  const user = await updateLuoguUserSummary(uid);
+  const user = await updateLuoguUserSummary(uid, 0);
   if (!user) return { message: "用户不存在" };
-  if (!user.introduction?.includes(code)) return { message: "未找到验证码" };
+  const { introduction } = user;
+  if (!introduction || !codes.some(({ txt }) => introduction.includes(txt)))
+    return { message: "未找到验证码" };
+
   await saveUser(uid);
   redirectToAuthorize(query, uid);
 }
