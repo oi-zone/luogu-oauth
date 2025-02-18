@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { Noto_Serif_TC } from "next/font/google";
+import { ClipboardCopy, RotateCw } from "lucide-react";
 import jwt from "jsonwebtoken";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,6 +10,7 @@ import * as Progress from "@radix-ui/react-progress";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -19,7 +21,6 @@ import { Button } from "@/components/ui/button";
 import useLoginForm from "@/hooks/use-login-form";
 import { verificationLoginFormSchema } from "./schemas";
 import { generateToken, loginWithVerification } from "./actions";
-import { ClipboardCopy, RotateCw } from "lucide-react";
 
 const notoSerif = Noto_Serif_TC({ subsets: [] });
 
@@ -67,6 +68,10 @@ export default function VerificationLoginForm() {
     if (progress === 100) newToken();
   }, [progress]);
 
+  // 复制验证码文本
+  const [copying, startCopy] = useTransition();
+  const codeInputRef = useRef<HTMLInputElement>(null);
+
   const [form, state, formAction, pending] = useLoginForm(
     {
       resolver: zodResolver(verificationLoginFormSchema),
@@ -82,12 +87,13 @@ export default function VerificationLoginForm() {
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={formAction}
       >
-        <div className="flex w-full items-end gap-2">
-          <div className="relative flex-grow">
-            <FormItem>
-              <FormLabel>验证码</FormLabel>
+        <FormItem>
+          <FormLabel>验证码</FormLabel>
+          <div className="flex w-full items-end gap-2">
+            <div className="relative flex-grow">
               <FormControl>
                 <Input
+                  ref={codeInputRef}
                   className={cn("relative z-10 pe-8", notoSerif.className)}
                   type="text"
                   value={code?.txt ?? ""}
@@ -95,36 +101,46 @@ export default function VerificationLoginForm() {
                   disabled={expired}
                 />
               </FormControl>
-            </FormItem>
-            <Progress.Root
-              className="absolute bottom-0 left-0 h-9 w-full overflow-hidden rounded-md"
-              value={progress}
-            >
-              <Progress.Indicator
-                className="bg-input h-full transition-all"
-                style={{ width: `${progress.toString()}%` }}
-              />
-            </Progress.Root>
+              <Progress.Root
+                className="absolute bottom-0 left-0 h-9 w-full overflow-hidden rounded-md"
+                value={progress}
+              >
+                <Progress.Indicator
+                  className="bg-input h-full transition-all"
+                  style={{ width: `${progress.toString()}%` }}
+                />
+              </Progress.Root>
+              <Button
+                className="absolute right-0 bottom-0 z-10 cursor-pointer text-gray-400 hover:text-gray-500"
+                type="button"
+                variant="link"
+                size="icon"
+                onClick={() => {
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  const input = codeInputRef.current!;
+                  input.select();
+                  startCopy(() => navigator.clipboard.writeText(input.value));
+                }}
+                disabled={copying}
+                aria-label="复制"
+              >
+                <ClipboardCopy aria-disabled />
+              </Button>
+            </div>
             <Button
-              className="absolute right-0 bottom-0 z-10 cursor-pointer text-gray-400 hover:text-gray-500"
+              className="cursor-pointer"
               type="button"
-              variant="link"
+              variant="outline"
               size="icon"
+              onClick={newToken}
+              disabled={generating}
+              aria-label="刷新"
             >
-              <ClipboardCopy />
+              <RotateCw aria-disabled />
             </Button>
           </div>
-          <Button
-            className="cursor-pointer"
-            type="button"
-            variant="outline"
-            size="icon"
-            onClick={newToken}
-            disabled={generating}
-          >
-            <RotateCw />
-          </Button>
-        </div>
+          <FormDescription>请将验证码文字粘贴至洛谷个人介绍。</FormDescription>
+        </FormItem>
         <FormField
           control={form.control}
           name="uid"
