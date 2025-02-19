@@ -18,7 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { select } from "./actions";
 import ButtonTabSelect from "./button-tab-select";
-import ClientIdForm from "./client-id-form";
+import ClientIdLoginForm from "./client-id-login-form";
 import SavedUsers from "./saved-users";
 import VerificationLoginForm from "./verification-login-form";
 
@@ -74,7 +74,7 @@ export default async function Page({
                         </TabsTrigger>
                       </TabsList>
                       <TabsContent value="client-id-form">
-                        <ClientIdForm />
+                        <ClientIdLoginForm />
                       </TabsContent>
                       <TabsContent value="verification-login-form">
                         <VerificationLoginForm />

@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const uidSchema = z.coerce.number().int().min(1);
 
-export const formSchema = z.object({
+export const clientIdLoginFormSchema = z.object({
   uid: uidSchema,
   clientId: z
     .string()

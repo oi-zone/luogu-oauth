@@ -16,12 +16,12 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { loginWithClientId } from "./actions";
-import { formSchema } from "./schemas";
+import { clientIdLoginFormSchema } from "./schemas";
 
-export default function ClientIdForm() {
+export default function ClientIdLoginForm() {
   const [form, state, formAction, pending, turnstileProps] = useLoginForm(
     {
-      resolver: zodResolver(formSchema),
+      resolver: zodResolver(clientIdLoginFormSchema),
       defaultValues: { uid: "" as never, clientId: "" },
     },
     loginWithClientId,

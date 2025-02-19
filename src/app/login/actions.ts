@@ -16,7 +16,10 @@ import ALPHABET from "@/lib/thousand-character-classic.json";
 import { siteVerify } from "@/lib/turnstile";
 import type { LoginFormState } from "@/hooks/use-login-form";
 
-import { formSchema, verificationLoginFormSchema } from "./schemas";
+import {
+  clientIdLoginFormSchema,
+  verificationLoginFormSchema,
+} from "./schemas";
 
 function redirectToAuthorize(query: string, uid: number) {
   const urlSearchParams = new URLSearchParams(query);
@@ -36,7 +39,7 @@ async function saveUser(uid: number) {
 
 export async function loginWithClientId(
   query: string,
-  formData: z.infer<typeof formSchema>,
+  formData: z.infer<typeof clientIdLoginFormSchema>,
   turnstileToken: string,
 ): Promise<LoginFormState> {
   const turnstile = await siteVerify(turnstileToken);
@@ -44,7 +47,7 @@ export async function loginWithClientId(
     return {
       message: `未通过人机验证：${turnstile["error-codes"].join("，")}`,
     };
-  const { uid, clientId } = await formSchema.parseAsync(formData);
+  const { uid, clientId } = await clientIdLoginFormSchema.parseAsync(formData);
 
   if (!(await saveClientId(uid, clientId))) return { message: "登录失败" };
   await saveUser(uid);
