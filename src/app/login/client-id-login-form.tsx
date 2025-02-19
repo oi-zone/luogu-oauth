@@ -2,8 +2,10 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Turnstile } from "@marsidev/react-turnstile";
+import { AlertCircle } from "lucide-react";
 
 import useLoginForm from "@/hooks/use-login-form";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -86,8 +88,13 @@ export default function ClientIdLoginForm() {
           className="rounded-md overflow-hidden border shadow-xs"
           {...turnstileProps}
         />
-        {/* TODO: style */}
-        <FormMessage>{state?.message}</FormMessage>
+        {state && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>出错啦！</AlertTitle>
+            <AlertDescription>{state.message}</AlertDescription>
+          </Alert>
+        )}
         <Button
           type="submit"
           className="w-full cursor-pointer"

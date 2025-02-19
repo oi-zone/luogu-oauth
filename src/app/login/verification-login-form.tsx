@@ -6,10 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Turnstile } from "@marsidev/react-turnstile";
 import * as Progress from "@radix-ui/react-progress";
 import jwt from "jsonwebtoken";
-import { ClipboardCopy, RotateCw } from "lucide-react";
+import { AlertCircle, ClipboardCopy, RotateCw } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import useLoginForm from "@/hooks/use-login-form";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -184,8 +185,13 @@ export default function VerificationLoginForm() {
           className="rounded-md overflow-hidden border shadow-xs"
           {...turnstileProps}
         />
-        {/* TODO: style */}
-        <FormMessage>{state?.message}</FormMessage>
+        {state && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>出错啦！</AlertTitle>
+            <AlertDescription>{state.message}</AlertDescription>
+          </Alert>
+        )}
         <Button
           type="submit"
           className="w-full cursor-pointer"
