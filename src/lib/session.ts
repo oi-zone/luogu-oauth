@@ -3,10 +3,6 @@ import { getIronSession, type SessionOptions } from "iron-session";
 
 import { SECRET_KEY } from "./constants";
 
-if (!SECRET_KEY || SECRET_KEY.length < 32) {
-  throw new Error("SECRET_KEY must be at least 32 characters long");
-}
-
 export const sessionOptions: SessionOptions = {
   password: SECRET_KEY,
   cookieName: "session",
