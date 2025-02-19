@@ -1,12 +1,11 @@
 // @ts-check
-import pluginJs from "@eslint/js";
-import tseslint from "typescript-eslint";
-import pluginReact from "eslint-plugin-react";
-import configPrettier from "eslint-config-prettier";
-
-import { dirname } from "path";
 import { fileURLToPath } from "node:url";
+import { dirname } from "path";
 import { FlatCompat } from "@eslint/eslintrc";
+import pluginJs from "@eslint/js";
+import configPrettier from "eslint-config-prettier";
+import pluginReact from "eslint-plugin-react";
+import tseslint from "typescript-eslint";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -33,6 +32,9 @@ export default tseslint.config(
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
       },
+    },
+    rules: {
+      "@typescript-eslint/consistent-type-imports": "error",
     },
   },
   { files: [shadcn], extends: tseslint.configs.strict },

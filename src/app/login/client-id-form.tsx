@@ -1,6 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import useLoginForm from "@/hooks/use-login-form";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -11,9 +13,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import useLoginForm from "@/hooks/use-login-form";
-import { formSchema } from "./schemas";
+
 import { loginWithClientId } from "./actions";
+import { formSchema } from "./schemas";
 
 export default function ClientIdForm() {
   const [form, state, formAction, pending] = useLoginForm(

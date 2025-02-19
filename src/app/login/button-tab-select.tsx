@@ -1,7 +1,7 @@
 "use client";
 
-import { useCarousel } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
+import { useCarousel } from "@/components/ui/carousel";
 
 export default function ButtonTabSelect() {
   const { scrollPrev } = useCarousel();

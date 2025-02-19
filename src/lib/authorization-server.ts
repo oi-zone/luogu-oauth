@@ -1,13 +1,14 @@
 import { randomBytes } from "node:crypto";
+import type { NextRequest } from "next/server";
 import {
   AuthorizationServer,
   OAuthRequest,
-  OAuthScope,
+  type OAuthScope,
 } from "@jmondi/oauth2-server";
 import { Scope, type Prisma } from "@prisma/client";
+
 import { SECRET_KEY } from "./constants";
 import prisma from "./prisma";
-import type { NextRequest } from "next/server";
 
 export const requestFromNext = async (request: NextRequest) =>
   new OAuthRequest({

@@ -2,7 +2,7 @@
 
 import { startTransition, useActionState } from "react";
 import { useSearchParams } from "next/navigation";
-import { type FieldValues, useForm } from "react-hook-form";
+import { useForm, type FieldValues } from "react-hook-form";
 
 export type LoginFormState = { message: string } | undefined;
 

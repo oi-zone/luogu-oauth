@@ -4,15 +4,17 @@ import { randomInt } from "crypto";
 import { redirect } from "next/navigation";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
+
 import {
   SECRET_KEY,
   VERIFICATION_CODE_EXPIRES_IN,
   VERIFICATION_CODE_REFRESH_INTERVAL,
 } from "@/lib/constants";
-import { getIronSessionData } from "@/lib/session";
 import { saveClientId, updateLuoguUserSummary } from "@/lib/luogu";
-import type { LoginFormState } from "@/hooks/use-login-form";
+import { getIronSessionData } from "@/lib/session";
 import ALPHABET from "@/lib/thousand-character-classic.json";
+import type { LoginFormState } from "@/hooks/use-login-form";
+
 import { formSchema, verificationLoginFormSchema } from "./schemas";
 
 function redirectToAuthorize(query: string, uid: number) {

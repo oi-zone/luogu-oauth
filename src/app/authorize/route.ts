@@ -1,10 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
-import jwt from "jsonwebtoken";
 import { responseToVanilla } from "@jmondi/oauth2-server/vanilla";
-import { SECRET_KEY } from "@/lib/constants";
+import jwt from "jsonwebtoken";
+
 import authorizationServer, {
   requestFromNext,
 } from "@/lib/authorization-server";
+import { SECRET_KEY } from "@/lib/constants";
 import prisma from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {

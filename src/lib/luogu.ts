@@ -1,10 +1,11 @@
+import type { Prisma } from "@prisma/client";
 import type {
   EloRatingSummary,
   SelfDetails,
   UserDetails,
   UserPractice,
 } from "luogu-api-docs/luogu-api";
-import { Prisma } from "@prisma/client";
+
 import prisma from "@/lib/prisma";
 
 export const getLuoguUserAvatar = (uid: number) =>

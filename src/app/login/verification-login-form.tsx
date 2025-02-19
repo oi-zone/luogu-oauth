@@ -2,10 +2,14 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import { Noto_Serif_TC } from "next/font/google";
-import { ClipboardCopy, RotateCw } from "lucide-react";
-import jwt from "jsonwebtoken";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Progress from "@radix-ui/react-progress";
+import jwt from "jsonwebtoken";
+import { ClipboardCopy, RotateCw } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import useLoginForm from "@/hooks/use-login-form";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -16,11 +20,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import useLoginForm from "@/hooks/use-login-form";
-import { cn } from "@/lib/utils";
-import { verificationLoginFormSchema } from "./schemas";
+
 import { generateToken, loginWithVerification } from "./actions";
+import { verificationLoginFormSchema } from "./schemas";
 
 const notoSerif = Noto_Serif_TC({ subsets: [] });
 

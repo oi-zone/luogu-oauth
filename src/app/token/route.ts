@@ -1,5 +1,6 @@
 import { type NextRequest } from "next/server";
 import { responseToVanilla } from "@jmondi/oauth2-server/vanilla";
+
 import authorizationServer, {
   requestFromNext,
 } from "@/lib/authorization-server";

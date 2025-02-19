@@ -1,5 +1,6 @@
-import { updateLuoguUserSummary } from "@/lib/luogu";
 import { BadgeCheck } from "lucide-react";
+
+import { updateLuoguUserSummary } from "@/lib/luogu";
 
 export default async function UserInfoText({ uid }: { uid: number }) {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

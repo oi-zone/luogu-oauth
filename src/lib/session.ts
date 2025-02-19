@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { getIronSession, type SessionOptions } from "iron-session";
+
 import { SECRET_KEY } from "./constants";
 
 if (!SECRET_KEY || SECRET_KEY.length < 32) {

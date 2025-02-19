@@ -1,4 +1,5 @@
 import type { SearchParams } from "next/dist/server/request/search-params";
+
 import { getIronSessionData } from "@/lib/session";
 import { cn } from "@/lib/utils";
 import {
@@ -13,12 +14,13 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import ClientIdForm from "./client-id-form";
-import { select } from "./actions";
-import SavedUsers from "./saved-users";
-import ButtonTabSelect from "./button-tab-select";
-import VerificationLoginForm from "./verification-login-form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+import { select } from "./actions";
+import ButtonTabSelect from "./button-tab-select";
+import ClientIdForm from "./client-id-form";
+import SavedUsers from "./saved-users";
+import VerificationLoginForm from "./verification-login-form";
 
 export default async function Page({
   searchParams,

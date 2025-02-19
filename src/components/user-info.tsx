@@ -1,8 +1,10 @@
 import { Suspense } from "react";
 import { getImageProps } from "next/image";
+
 import { getLuoguUserAvatar } from "@/lib/luogu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+
 import UserInfoText from "./user-info-text";
 
 export default function UserInfo({ uid }: { uid: number }) {
