@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Turnstile } from "@marsidev/react-turnstile";
 
 import useLoginForm from "@/hooks/use-login-form";
 import { Button } from "@/components/ui/button";
@@ -18,7 +19,7 @@ import { loginWithClientId } from "./actions";
 import { formSchema } from "./schemas";
 
 export default function ClientIdForm() {
-  const [form, state, formAction, pending] = useLoginForm(
+  const [form, state, formAction, pending, turnstileProps] = useLoginForm(
     {
       resolver: zodResolver(formSchema),
       defaultValues: { uid: "" as never, clientId: "" },
@@ -77,6 +78,11 @@ export default function ClientIdForm() {
               <FormMessage />
             </FormItem>
           )}
+        />
+        <Turnstile
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+          {...turnstileProps}
         />
         {/* TODO: style */}
         <FormMessage>{state?.message}</FormMessage>

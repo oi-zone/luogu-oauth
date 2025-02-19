@@ -13,6 +13,7 @@ import {
 import { saveClientId, updateLuoguUserSummary } from "@/lib/luogu";
 import { getIronSessionData } from "@/lib/session";
 import ALPHABET from "@/lib/thousand-character-classic.json";
+import { siteVerify } from "@/lib/turnstile";
 import type { LoginFormState } from "@/hooks/use-login-form";
 
 import { formSchema, verificationLoginFormSchema } from "./schemas";
@@ -35,10 +36,16 @@ async function saveUser(uid: number) {
 
 export async function loginWithClientId(
   query: string,
-  prevState: LoginFormState,
   formData: z.infer<typeof formSchema>,
+  turnstileToken: string,
 ): Promise<LoginFormState> {
+  const turnstile = await siteVerify(turnstileToken);
+  if (!turnstile.success)
+    return {
+      message: `未通过人机验证：${turnstile["error-codes"].join("，")}`,
+    };
   const { uid, clientId } = await formSchema.parseAsync(formData);
+
   if (!(await saveClientId(uid, clientId))) return { message: "登录失败" };
   await saveUser(uid);
   redirectToAuthorize(query, uid);
@@ -103,9 +110,14 @@ const verificationJwtSchema = z
 export async function loginWithVerification(
   tokens: string[],
   query: string,
-  prevState: LoginFormState,
   formData: z.infer<typeof verificationLoginFormSchema>,
+  turnstileToken: string,
 ): Promise<LoginFormState> {
+  const turnstile = await siteVerify(turnstileToken);
+  if (!turnstile.success)
+    return {
+      message: `未通过人机验证：${turnstile["error-codes"].join("，")}`,
+    };
   const { uid } = await verificationLoginFormSchema.parseAsync(formData);
   const codes = await verificationJwtSchema.parseAsync(tokens);
 

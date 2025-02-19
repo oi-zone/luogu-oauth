@@ -14,6 +14,9 @@ importers:
       '@jmondi/oauth2-server':
         specifier: ^4.0.2
         version: 4.0.2
+      '@marsidev/react-turnstile':
+        specifier: ^1.1.0
+        version: 1.1.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@prisma/client':
         specifier: ^6.3.1
         version: 6.3.1(prisma@6.3.1(typescript@5.7.3))(typescript@5.7.3)
@@ -491,6 +494,12 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
+
+  '@marsidev/react-turnstile@1.1.0':
+    resolution: {integrity: sha512-X7bP9ZYutDd+E+klPYF+/BJHqEyyVkN4KKmZcNRr84zs3DcMoftlMAuoKqNSnqg0HE7NQ1844+TLFSJoztCdSA==}
+    peerDependencies:
+      react: ^17.0.2 || ^18.0.0 || ^19.0
+      react-dom: ^17.0.2 || ^18.0.0 || ^19.0
 
   '@next/env@15.1.7':
     resolution: {integrity: sha512-d9jnRrkuOH7Mhi+LHav2XW91HOgTAWHxjMPkXMGBc9B2b7614P7kjt8tAplRvJpbSt4nbO1lugcT/kAaWzjlLQ==}
@@ -3410,6 +3419,11 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
+
+  '@marsidev/react-turnstile@1.1.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
 
   '@next/env@15.1.7': {}
 

@@ -1,33 +1,53 @@
 "use client";
 
-import { startTransition, useActionState } from "react";
+import { startTransition, useActionState, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useForm, type FieldValues } from "react-hook-form";
+import type { TurnstileProps } from "@marsidev/react-turnstile";
+import {
+  useForm,
+  type FieldValues,
+  type SubmitHandler,
+  type UseFormProps,
+} from "react-hook-form";
 
 export type LoginFormState = { message: string } | undefined;
 
 export default function useLoginForm<
   TFieldValues extends FieldValues = FieldValues,
 >(
-  props: Parameters<typeof useForm<TFieldValues>>[0],
+  props: UseFormProps<TFieldValues>,
   action: (
     query: string,
-    state: LoginFormState,
     payload: TFieldValues,
+    turnstileResponse: string,
   ) => Promise<LoginFormState>,
 ) {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") ?? "";
 
+  const [turnstileResponse, setTurnstileResponse] = useState("");
+
   const form = useForm(props);
   const [state, formAction, pending] = useActionState(
-    action.bind(null, query),
+    async (state: LoginFormState, payload: TFieldValues) =>
+      action(query, payload, turnstileResponse),
     undefined,
   );
-  const submitAction: Parameters<typeof form.handleSubmit>[0] = (payload) => {
+  const submitAction: SubmitHandler<TFieldValues> = (payload) => {
     startTransition(() => {
       formAction(payload);
     });
   };
-  return [form, state, form.handleSubmit(submitAction), pending] as const;
+  return [
+    form,
+    state,
+    form.handleSubmit(submitAction),
+    pending || !turnstileResponse,
+    {
+      onSuccess: setTurnstileResponse,
+      onExpire() {
+        setTurnstileResponse("");
+      },
+    } as Partial<TurnstileProps>,
+  ] as const;
 }

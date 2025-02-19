@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { Noto_Serif_TC } from "next/font/google";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Turnstile } from "@marsidev/react-turnstile";
 import * as Progress from "@radix-ui/react-progress";
 import jwt from "jsonwebtoken";
 import { ClipboardCopy, RotateCw } from "lucide-react";
@@ -80,7 +81,7 @@ export default function VerificationLoginForm() {
   const [copying, startCopy] = useTransition();
   const codeInputRef = useRef<HTMLInputElement>(null);
 
-  const [form, state, formAction, pending] = useLoginForm(
+  const [form, state, formAction, pending, turnstileProps] = useLoginForm(
     {
       resolver: zodResolver(verificationLoginFormSchema),
       defaultValues: { uid: "" as never },
@@ -175,6 +176,11 @@ export default function VerificationLoginForm() {
               <FormMessage />
             </FormItem>
           )}
+        />
+        <Turnstile
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+          {...turnstileProps}
         />
         {/* TODO: style */}
         <FormMessage>{state?.message}</FormMessage>
