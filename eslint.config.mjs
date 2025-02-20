@@ -17,7 +17,7 @@ const compat = new FlatCompat({
 const shadcn = "src/components/ui/*.tsx";
 
 export default tseslint.config(
-  { ignores: [".next/"] },
+  { ignores: [".next/", "prisma/client/"] },
   { files: ["**/*.cjs"], languageOptions: { sourceType: "commonjs" } },
   pluginJs.configs.recommended,
   {
