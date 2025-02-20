@@ -81,7 +81,7 @@ export default function ClientIdLoginForm() {
         />
         <Turnstile
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+          siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY!}
           options={{ size: "flexible" }}
           className="rounded-md overflow-hidden border shadow-xs"
           {...turnstileProps}

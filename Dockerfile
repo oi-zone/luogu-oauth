@@ -44,6 +44,10 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=cache,target=/root/.local/share/pnpm/store \
     pnpm install --frozen-lockfile
 
+# Set the environment variable for the Cloudflare Turnstile sitekey.
+# See https://developers.cloudflare.com/turnstile/troubleshooting/testing/#dummy-sitekeys-and-secret-keys
+ARG NEXT_PUBLIC_TURNSTILE_SITEKEY
+ENV NEXT_PUBLIC_TURNSTILE_SITEKEY=${NEXT_PUBLIC_TURNSTILE_SITEKEY}
 # Copy the rest of the source files into the image.
 COPY . .
 # Run the build script.
