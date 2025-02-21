@@ -42,3 +42,11 @@ next-env.d.ts
 /prisma/client/
 
 /secret-key.txt
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+!.env.test
