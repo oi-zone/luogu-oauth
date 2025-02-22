@@ -1,0 +1,8 @@
+.turnstile {
+  @apply relative;
+}
+
+.turnstile > div:not([data-slot="skeleton"]) {
+  @apply absolute;
+  inset: -1px;
+}

@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Turnstile } from "@marsidev/react-turnstile";
 import { AlertCircle } from "lucide-react";
 
 import useLoginForm from "@/hooks/use-login-form";
@@ -16,6 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { CloudflareTurnstile } from "@/components/cloudflare-turnstile";
 
 import { loginWithClientId } from "./actions";
 import { clientIdLoginFormSchema } from "./schemas";
@@ -81,13 +81,7 @@ export default function ClientIdLoginForm() {
             </FormItem>
           )}
         />
-        <Turnstile
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY!}
-          options={{ size: "flexible" }}
-          className="rounded-md overflow-hidden border shadow-xs"
-          {...turnstileProps}
-        />
+        <CloudflareTurnstile {...turnstileProps} />
         {state && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />

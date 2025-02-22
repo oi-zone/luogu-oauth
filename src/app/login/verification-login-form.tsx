@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { Noto_Serif_TC } from "next/font/google";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Turnstile } from "@marsidev/react-turnstile";
 import * as Progress from "@radix-ui/react-progress";
 import jwt from "jsonwebtoken";
 import { AlertCircle, ClipboardCopy, RotateCw } from "lucide-react";
@@ -22,6 +21,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { CloudflareTurnstile } from "@/components/cloudflare-turnstile";
 
 import { generateToken, loginWithVerification } from "./actions";
 import { verificationLoginFormSchema } from "./schemas";
@@ -178,13 +178,7 @@ export default function VerificationLoginForm() {
             </FormItem>
           )}
         />
-        <Turnstile
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY!}
-          options={{ size: "flexible" }}
-          className="rounded-md overflow-hidden border shadow-xs"
-          {...turnstileProps}
-        />
+        <CloudflareTurnstile {...turnstileProps} />
         {state && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
