@@ -21,9 +21,9 @@
     "",
     "^[./]"
   ],
-  "importOrderTypeScriptVersion": "5.0.0",
+  "importOrderTypeScriptVersion": "5.7.3",
   "plugins": [
-    "prettier-plugin-tailwindcss",
-    "@ianvs/prettier-plugin-sort-imports"
+    "@ianvs/prettier-plugin-sort-imports",
+    "prettier-plugin-tailwindcss"
   ]
 }

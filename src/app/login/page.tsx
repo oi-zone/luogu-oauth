@@ -36,16 +36,16 @@ export default async function Page({
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
       <div className={cn("w-full max-w-sm", twoCols && "md:max-w-3xl")}>
         <div className="flex flex-col gap-6">
-          <Card>
-            <CardHeader className="!pb-0 md:p-8">
+          <Card className="md:gap-8 md:py-8">
+            <CardHeader className="md:px-8">
               <CardTitle className="text-2xl">欢迎回来</CardTitle>
               <CardDescription>授权登录您的洛谷账号</CardDescription>
             </CardHeader>
-            <CardContent className="p-0 pl-4">
+            <CardContent className="px-0 pl-4">
               <Carousel opts={{ watchDrag: false, duration: 14 }}>
                 <CarouselContent>
                   {twoCols && (
-                    <CarouselItem className="p-6 md:basis-1/2 md:p-8">
+                    <CarouselItem className="px-6 md:basis-1/2 md:px-8">
                       <SavedUsers
                         users={saved}
                         action={select.bind(null, query as string)}
@@ -54,7 +54,7 @@ export default async function Page({
                   )}
                   <CarouselItem
                     className={cn(
-                      "space-y-6 p-6 md:p-8",
+                      "space-y-6 px-6 md:px-8",
                       twoCols && "md:basis-1/2",
                     )}
                   >
