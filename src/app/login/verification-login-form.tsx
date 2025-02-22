@@ -75,8 +75,8 @@ export default function VerificationLoginForm() {
 
   // 自动刷新验证码
   useEffect(() => {
-    if (progress === 100) newToken();
-  }, [progress]);
+    if (progress === 100 && !generating) newToken();
+  }, [progress, generating]);
 
   // 复制验证码文本
   const [copying, startCopy] = useTransition();
