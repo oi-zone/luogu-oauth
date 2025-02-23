@@ -51,3 +51,4 @@ secret-key.txt
 # Go files
 go.*
 **/*.go
+prisma/db/

@@ -5,7 +5,7 @@
   "scripts": {
     "prepare": "husky || true",
     "dev": "next dev --turbopack",
-    "prebuild": "prisma generate",
+    "prebuild": "prisma generate --generator client_js",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
