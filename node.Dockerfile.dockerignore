@@ -47,3 +47,7 @@ playwright-report/
 test-results/
 
 secret-key.txt
+
+# Go files
+go.*
+**/*.go

@@ -1,7 +1,8 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "[prisma]": {
-    "editor.defaultFormatter": "Prisma.prisma"
-  },
+  "[go]": { "editor.defaultFormatter": "golang.go" },
+  "[go.mod]": { "editor.defaultFormatter": "golang.go" },
+  "[go.sum]": { "editor.defaultFormatter": "golang.go" },
+  "[prisma]": { "editor.defaultFormatter": "Prisma.prisma" },
   "material-icon-theme.activeIconPack": "react"
 }
