@@ -11,6 +11,7 @@ services:
   server:
     build:
       context: .
+      dockerfile: node.Dockerfile
       args:
         NEXT_PUBLIC_TURNSTILE_SITEKEY: ${NEXT_PUBLIC_TURNSTILE_SITEKEY}
     environment:

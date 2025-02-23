@@ -4,11 +4,14 @@
 # For more help, visit the .dockerignore file reference guide at
 # https://docs.docker.com/go/build-context-dockerignore/
 
+**/.DS_Store
 **/.classpath
 **/.dockerignore
 **/.env
 **/.git
+**/.gitattributes
 **/.gitignore
+**/.idea
 **/.project
 **/.settings
 **/.toolstarget
@@ -32,5 +35,15 @@
 **/dist
 LICENSE
 README.md
+
+*.Dockerfile
+*.dockerignore
+
+.env.*
+.github/
+next-env.d.ts
+prisma/client/
+playwright-report/
+test-results/
 
 secret-key.txt
