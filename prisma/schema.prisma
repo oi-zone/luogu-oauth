@@ -11,6 +11,7 @@ generator client_js {
 
 generator client_go {
   provider = "go run github.com/steebchen/prisma-client-go"
+  output   = "../internal/db"
 }
 
 datasource db {
