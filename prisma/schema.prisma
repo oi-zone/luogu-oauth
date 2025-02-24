@@ -144,7 +144,7 @@ model LuoguSession {
   user     LuoguUser @relation(fields: [uid], references: [uid])
 
   valid      Boolean  @default(true)
-  lastUsedAt DateTime @updatedAt
+  lastUsedAt DateTime @default(now())
 }
 
 model LuoguContest {

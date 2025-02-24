@@ -131,7 +131,7 @@ export async function saveClientId(
   await prisma.luoguSession.upsert({
     where: { uid, clientId },
     create: { uid, clientId },
-    update: {},
+    update: { lastUsedAt: new Date() },
   });
   return true;
 }
