@@ -29,3 +29,16 @@ func (app app) getSession(ctx context.Context, accessToken string) (*db.LuoguSes
 	}
 	return &token.User().Sessions()[0], nil
 }
+
+func (app app) updateSessionValidity(ctx context.Context, uid int, clientId string, valid bool) (err error) {
+	session := app.client.LuoguSession.FindMany(
+		db.LuoguSession.ClientID.Equals(clientId),
+		db.LuoguSession.UID.Equals(uid),
+	)
+	if valid {
+		_, err = session.Update(db.LuoguSession.LastUsedAt.Set(time.Now())).Exec(ctx)
+	} else {
+		_, err = session.Update(db.LuoguSession.Valid.Set(false)).Exec(ctx)
+	}
+	return
+}
