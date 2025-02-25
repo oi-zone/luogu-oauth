@@ -1,8 +1,10 @@
 package main
 
 import (
+	"errors"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/joho/godotenv"
 	"github.com/wxh06/luogu-oauth/internal/app"
@@ -10,7 +12,7 @@ import (
 )
 
 func main() {
-	if err := godotenv.Load(); err != nil {
+	if err := godotenv.Load(); err != nil && !errors.Is(err, os.ErrNotExist) {
 		log.Fatal(err)
 	}
 

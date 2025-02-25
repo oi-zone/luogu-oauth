@@ -3,7 +3,7 @@
 When you're ready, start your application by running:
 `docker compose up --build`.
 
-Your application will be available at http://localhost:3000.
+Your application will be available at <http://localhost:3000> and <http://localhost:8080>.
 
 ### Deploying your application to the cloud
 
@@ -21,3 +21,4 @@ docs for more detail on building and pushing.
 ### References
 
 - [Docker's Node.js guide](https://docs.docker.com/language/nodejs/)
+- [Docker's Go guide](https://docs.docker.com/language/golang/)

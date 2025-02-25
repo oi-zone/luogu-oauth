@@ -34,7 +34,7 @@
 **/build
 **/dist
 LICENSE
-README.md
+README*.md
 
 *.Dockerfile
 *.dockerignore
@@ -49,6 +49,7 @@ test-results/
 secret-key.txt
 
 # Go files
-go.*
-**/*.go
+go.mod
+go.sum
+*.go
 internal/
