@@ -25,7 +25,6 @@ type app struct {
 
 func (app app) rewrite(r *httputil.ProxyRequest) {
 	r.SetXForwarded()
-	r.SetURL(app.url)
 	r.Out.Header.Set("x-luogu-type", "content-only")
 	r.Out.Header.Set("x-lentille-request", "content-only")
 
@@ -35,17 +34,25 @@ func (app app) rewrite(r *httputil.ProxyRequest) {
 		ctx := context.Background()
 		session, err := app.getSession(ctx, authorization[1])
 		if err != nil {
+			// TODO: 401 Unauthorized
 			log.Println(err)
 			return
 		}
 		r.Out.AddCookie(&http.Cookie{Name: "_uid", Value: strconv.Itoa(session.UID)})
 		r.Out.AddCookie(&http.Cookie{Name: "__client_id", Value: session.ClientID})
+	} else if authorization[0] != "" {
+		// TODO: 400 Bad Request
+		return
 	}
+	r.SetURL(app.url)
 }
 
 func (app app) modifyResponse(r *http.Response) error {
 	var uid int
-	if cookie, err := r.Request.Cookie("_uid"); err != nil {
+	if cookie, err := r.Request.Cookie("_uid"); errors.Is(err, http.ErrNoCookie) {
+		// Not logged in
+		return nil
+	} else if err != nil {
 		return err
 	} else if uid, err = strconv.Atoi(cookie.Value); err != nil {
 		return err
