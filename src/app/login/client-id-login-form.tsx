@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { CloudflareTurnstile } from "@/components/cloudflare-turnstile";
+import { ClientIdGuide } from "@/app/login/client-id-guide";
 
 import { loginWithClientId } from "./actions";
 import { clientIdLoginFormSchema } from "./schemas";
@@ -63,12 +64,14 @@ export default function ClientIdLoginForm() {
             <FormItem className="grid gap-2">
               <div className="flex items-center">
                 <FormLabel>Client ID</FormLabel>
-                <a
-                  href="#"
-                  className="ml-auto text-sm leading-0 underline-offset-2 hover:underline"
-                >
-                  这是什么？
-                </a>
+                <ClientIdGuide>
+                  <button
+                    type="button"
+                    className="ml-auto text-sm leading-none underline-offset-2 hover:cursor-pointer hover:underline"
+                  >
+                    这是什么？
+                  </button>
+                </ClientIdGuide>
               </div>
               <FormControl>
                 <Input
