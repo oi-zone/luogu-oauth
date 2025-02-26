@@ -58,22 +58,22 @@ func (app app) modifyResponse(r *http.Response) error {
 		return err
 	}
 
-	var clientId string
+	var clientID string
 	if cookie, err := r.Request.Cookie("__client_id"); err != nil {
 		return err
 	} else {
-		clientId = cookie.Value
+		clientID = cookie.Value
 	}
 
 	ctx := context.Background()
 	cookies := r.Cookies()
 	if len(cookies) != 1 || cookies[0].Name != "_uid" || cookies[0].Value != strconv.Itoa(uid) {
-		if err := app.updateSessionValidity(ctx, uid, clientId, false); err != nil {
+		if err := app.updateSessionValidity(ctx, uid, clientID, false); err != nil {
 			return err
 		}
 		return errors.New("unauthorized")
 	}
-	if err := app.updateSessionValidity(ctx, uid, clientId, true); err != nil {
+	if err := app.updateSessionValidity(ctx, uid, clientID, true); err != nil {
 		return err
 	}
 	return nil

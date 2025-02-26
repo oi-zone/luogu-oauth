@@ -4,5 +4,7 @@
   "[go.mod]": { "editor.defaultFormatter": "golang.go" },
   "[go.sum]": { "editor.defaultFormatter": "golang.go" },
   "[prisma]": { "editor.defaultFormatter": "Prisma.prisma" },
+  "go.lintTool": "golangci-lint",
+  "go.lintFlags": ["--fast"],
   "material-icon-theme.activeIconPack": "react"
 }

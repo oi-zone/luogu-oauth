@@ -22,7 +22,7 @@ func (app app) getSession(ctx context.Context, accessToken string) (*db.LuoguSes
 		).
 		Exec(ctx)
 	if errors.Is(err, db.ErrNotFound) || token.Revoked || token.AccessTokenExpiresAt.Before(time.Now()) {
-		return nil, errors.New("Unauthorized")
+		return nil, errors.New("unauthorized")
 	}
 	if err != nil {
 		return nil, err
@@ -30,9 +30,9 @@ func (app app) getSession(ctx context.Context, accessToken string) (*db.LuoguSes
 	return &token.User().Sessions()[0], nil
 }
 
-func (app app) updateSessionValidity(ctx context.Context, uid int, clientId string, valid bool) (err error) {
+func (app app) updateSessionValidity(ctx context.Context, uid int, clientID string, valid bool) (err error) {
 	session := app.client.LuoguSession.FindMany(
-		db.LuoguSession.ClientID.Equals(clientId),
+		db.LuoguSession.ClientID.Equals(clientID),
 		db.LuoguSession.UID.Equals(uid),
 	)
 	if valid {
