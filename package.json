@@ -11,7 +11,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@hookform/resolvers": "^4.1.1",
+    "@hookform/resolvers": "^4.1.2",
     "@jmondi/oauth2-server": "^4.0.2",
     "@marsidev/react-turnstile": "^1.1.0",
     "@prisma/client": "^6.4.1",
@@ -28,14 +28,14 @@
     "embla-carousel-react": "^8.5.2",
     "iron-session": "^8.0.4",
     "jsonwebtoken": "^9.0.2",
-    "lucide-react": "^0.475.0",
+    "lucide-react": "^0.476.0",
     "luogu-api-docs": "github:0f-0b/luogu-api-docs",
-    "next": "^15.1.7",
+    "next": "~15.1.7",
     "next-themes": "^0.4.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
-    "tailwind-merge": "^3.0.1",
+    "tailwind-merge": "^3.0.2",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.24.2"
   },
@@ -44,15 +44,15 @@
     "@eslint/js": "^9.21.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.1",
     "@playwright/test": "^1.50.1",
-    "@tailwindcss/postcss": "^4.0.8",
+    "@tailwindcss/postcss": "^4.0.9",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^20.17.19",
     "@types/oidc-provider": "^8.8.0",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "eslint": "^9.21.0",
-    "eslint-config-next": "^15.1.7",
-    "eslint-config-prettier": "^10.0.1",
+    "eslint-config-next": "~15.1.7",
+    "eslint-config-prettier": "^10.0.2",
     "eslint-plugin-react": "^7.37.4",
     "husky": "^9.1.7",
     "lint-staged": "^15.4.3",
@@ -60,9 +60,9 @@
     "prettier-plugin-tailwindcss": "^0.6.11",
     "prisma": "^6.4.1",
     "shadcn": "2.4.0-canary.10",
-    "tailwindcss": "^4.0.8",
+    "tailwindcss": "^4.0.9",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.24.1"
+    "typescript-eslint": "^8.25.0"
   },
   "pnpm": {
     "neverBuiltDependencies": []
