@@ -1,0 +1,23 @@
+@reference "tailwindcss";
+
+.cheater {
+  @apply bg-yellow-800;
+}
+.gray {
+  @apply bg-gray-400;
+}
+.blue {
+  @apply bg-sky-500;
+}
+.green {
+  @apply bg-green-500;
+}
+.orange {
+  @apply bg-orange-500;
+}
+.red {
+  @apply bg-rose-500;
+}
+.purple {
+  @apply bg-purple-500;
+}

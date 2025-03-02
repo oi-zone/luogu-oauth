@@ -1,0 +1,26 @@
+@reference "tailwindcss";
+
+.cheater {
+  @apply text-yellow-800;
+}
+.gray {
+  @apply text-gray-400;
+}
+.blue {
+  @apply text-sky-500;
+}
+.green {
+  @apply text-green-500;
+}
+.orange {
+  @apply text-orange-500;
+}
+.gold {
+  @apply text-amber-400;
+}
+.red {
+  @apply text-rose-500;
+}
+.purple {
+  @apply text-purple-500;
+}

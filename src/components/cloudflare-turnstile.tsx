@@ -2,8 +2,7 @@ import { Turnstile, type TurnstileProps } from "@marsidev/react-turnstile";
 
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
-
-import styles from "./cloudflare-turnstile.module.css";
+import styles from "@/styles/turnstile.module.css";
 
 export function CloudflareTurnstile(props: Partial<TurnstileProps>) {
   return (
