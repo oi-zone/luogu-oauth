@@ -24,7 +24,7 @@ export async function getIronSessionData() {
   );
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (session.saved === undefined) session.saved = [];
+  session.saved ??= [];
 
   return session;
 }
